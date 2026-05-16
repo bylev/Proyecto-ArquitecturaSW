@@ -1,4 +1,4 @@
-# ADR-01: Arquitecura seleccionada
+# ADR-01: Arquitectura seleccionada
 
 | Campo  | Valor |
 |--------|-------|
