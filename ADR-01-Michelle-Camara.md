@@ -68,4 +68,4 @@ Cloudflare se incorporará como capa de entrada porque el dominio ya fue adquiri
 
 Un boceto de cómo se estructura tu sistema (draw.io, Mermaid o a mano escaneado)
 
-![Diagrama del sistema](images/DiagramaArquitectonico.jpg)
+![Diagrama del sistema](images/DiagaramArquitectonico.jpg)
