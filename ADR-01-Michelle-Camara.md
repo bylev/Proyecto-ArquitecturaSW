@@ -64,6 +64,6 @@ Cloudflare se incorporará como capa de entrada porque el dominio ya fue adquiri
 
 - **Técnica**: MVC realiza una recarga completa de página cada que realiza una acción el usuario, a diferencia de Blazor o frameworks de JS. Para los dashboards con gráficas, esto se compensa cargando los datos de forma asíncrona con Chart.js pero la experiencia no será tan fluida como con una Single Page Application.
 - **Deuda o Riesgo**: Si en el futuro, el negocio crece y requiere una aplicación móvil, o una API para integrarse en otros sistemas como facturación o GPS, la arquitectura MVC actual tendría que refactorizarse hacia una API REST separada.
-- 
+  
 ## Diagrama
 ![Diagrama del sistema](images/DiagaramArquitectonico.jpg)
