@@ -89,9 +89,9 @@ npm-debug.log
 *.coveragexml
 
 # Local config files (nunca subir archivos de configuración sensible)
+appsettings.json
 appsettings.local.json
 appsettings.*.local.json
-appsettings.Development.json
 
 # Database files
 *.mdf
