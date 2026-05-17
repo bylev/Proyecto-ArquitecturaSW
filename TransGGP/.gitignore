@@ -1,0 +1,189 @@
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio cache/options
+.vs/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
+*.sap
+
+# Rider IDE
+.idea/
+*.sln.iml
+*.swp
+*.swo
+*~
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Nuget packages
+*.nupkg
+*.snupkg
+*.nuget.props
+*.nuget.targets
+.nuget/
+
+# NuGet Symbol packages
+*.snupkg
+
+# The packages folder can be ignored because of Package Restore
+**/packages/*
+!**/packages/build/
+*.nuget.props
+*.nuget.targets
+
+# Rider
+.idea/
+*.sln.iml
+
+# ReSharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# Cake & Bakery files
+tools/
+!tools/packages.config
+
+# Backup & restore
+*.bak
+
+# Visual Studio cache directories
+.vs/
+
+# TypeScript v1 declaration files
+typings/
+
+# Node modules
+node_modules/
+npm-debug.log
+
+# Visual Studio code coverage results
+*.coverage
+*.coveragexml
+
+# Local config files (nunca subir archivos de configuración sensible)
+appsettings.local.json
+appsettings.*.local.json
+appsettings.Development.json
+
+# Database files
+*.mdf
+*.ldf
+*.ndf
+
+# SQL Server files
+App_Data/
+*.MDF
+*.LDF
+
+# Business Intelligence projects
+*.rdl.data
+*.bim.layout
+*.bim_*.settings
+*.rptproj.rsuser
+
+# Visual Studio cache/options directory
+.vs/
+
+# Backup files
+*.bak
+*.backup
+
+# Python Tools for Visual Studio (PTVS)
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Azure App Service generate by Visual Studio code snippet
+ServiceConfiguration.cscfg
+ServiceDefinition.csdef
+
+# Local user-specific settings
+launchSettings.json
+*.user
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Visual Studio temporary build files
+*.tmp_proj
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Unit test / coverage reports
+coverage
+.nyc_output
+
+# Miscellaneous
+.classpath
+.project
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# dotenv environment variables file
+.env.development.local
+.env.test.local
+.env.production.local
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Rider IDE
+.idea/
+
+# Temporary files
+temp/
+tmp/
+*.tmp
+
+# Don't commit sensitive data
+secrets.json
+appsettings.secrets.json
