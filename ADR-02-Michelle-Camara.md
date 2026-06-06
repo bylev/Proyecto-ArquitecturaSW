@@ -113,3 +113,7 @@ TransGGP.sln
    ![Diagrama Procesos](images/DiagramaProcesos.png)
 
 
+   ## Clausula de IA
+
+   Se utilizó herramientas de inteligencia artificial para autocompletados de texto, correción gramátical y para generar la organización actual de mi proyecto en el ADR. 
+   Se utilizó las diapositivas del profesor para entender las vistas arquitectónicas, y los diagramas de ejemplo para entender la visualización de cada una, y así generar los diagramas en Draw.io.
