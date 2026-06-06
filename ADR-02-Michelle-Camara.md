@@ -3,7 +3,7 @@
 | Campo  | Valor |
 |--------|-------|
 | Autor  | Michelle Cámara |
-| Fecha  | DD/MM/AAAA |
+| Fecha  | 05/06/2026 |
 | Estado | `Propuesto` 
 
 ---
