@@ -4,7 +4,7 @@
 |--------|-------|
 | Autor  | Michelle Cámara |
 | Fecha  | 15/05/2026 |
-| Estado | `Propuesto` |
+| Estado | `Aceptado` |
 
 ---
 
