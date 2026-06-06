@@ -54,11 +54,13 @@ La *vista de despliegue* responde: *¿dónde vive físicamente el sistema y qué
 **✅ Lo que gano:**
 
 **Técnica**: Cada vista cubre un ángulo distinto del sistema sin repetir información. La vista lógica  verifica que el dominio está completo. La Vista de Desarrollo documenta la estructura del código para facilitar el mantenimiento. La Vista de Procesos expone el flujo crítico de registro de servicios. La Vista de Despliegue documenta la infraestructura cloud para el despliegue futuro en producción. 
+
 **Proceso**: Al usar Draw.io, los diagramas son visualmente claros y agradables para el entendimiento de las vistas. Además, al tener cada vista en un archivo separado, se pueden versionar de forma independiente en Git, lo que refleja el proceso real de desarrollo y evolución de la arquitectura a lo largo del tiempo.
 
 **⚠️ Lo que sacrifico o asumo:**
 
 **Limitación técnica**:Al usar Draw.io, los diagramas son archivos binarios XML que no se pueden versionar de forma legible en Git. Esto significa que no se puede rastrear fácilmente la evolución de los diagramas a lo largo del tiempo, lo que dificulta el proceso de revisión y colaboración en equipo. Sin embargo, se asume que la claridad visual y la organización de los diagramas compensan esta limitación.
+
 **Deuda o riesgo**: Si la arquitectura ambia significativamente en las siguientes fases, por ejemplo al agregar Repository Pattern o separar en API REST, los cuatro diagramas deberán actualizarse manualmente para mantenerse sincronizados con el código real. Es una deuda de documentación asumida conscientemente.
 ## Diagrama
 
