@@ -1,4 +1,4 @@
-# ADR-02: [Título corto de la decisión]
+# ADR-02: Vistas arquitectónicas y diagramas
 
 | Campo  | Valor |
 |--------|-------|
