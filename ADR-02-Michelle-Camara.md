@@ -78,7 +78,7 @@ Muestra la infraestructura cloud donde vive el sistema. Responde: **¿dónde viv
 
 ### Nivel 3 - Vista de Desarrollo
 
-Muestra el flujo de procesos. En este caso, se encuentra la estructura de carpetas del código.
+Muestra el flujo de procesos. En este caso, se encuentra la estructura de carpetas del sistema
 
 ```text
 TransGGP.sln
