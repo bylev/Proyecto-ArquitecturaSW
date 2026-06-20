@@ -1,6 +1,5 @@
 # ADR-03: Incorporación de una API REST con ASP.NET Core Web API
 
-# ADR-04: Implementación de API REST con ASP.NET Core Web API y Swagger
 
 | Campo  | Valor |
 |--------|-------|
