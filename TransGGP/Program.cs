@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using TransGGP.Data;
+using TransGGP.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,11 +7,7 @@ var connectionString = builder.Configuration
     .GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string not found.");
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseMySql(
-        connectionString,
-        ServerVersion.AutoDetect(connectionString)
-    ));
+builder.Services.AddInfrastructure(connectionString);
 
 builder.Services.AddControllersWithViews();
 
