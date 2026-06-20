@@ -129,6 +129,14 @@ TransGGP.API/
 ✅ Swagger accesible en `http://localhost:5000` con documentación interactiva
 
 ---
+
+# Resultado 
+
+![API REST en Swagger](images/API.png)
+![Prueba GET en Swagger](images/GET.png)
+![Prueba POST en Swagger](images/POST.png)
+![Prueba POST en Swagger Resultado](images/POST2.png)
+
 # Claúsula de IA
 
 Utilicé IA para redactar y organizar este ADR, además para comprender mejor el funcionamiento de una API en este proyecto y así guiarme pera la implementación.  
