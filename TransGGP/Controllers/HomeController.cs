@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using TransGGP.Models;
+using TransGGP.ViewModels;
 
 namespace TransGGP.Controllers
 {

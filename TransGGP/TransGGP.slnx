@@ -1,3 +1,6 @@
 <Solution>
+  <Project Path="../TransGGP.Application/TransGGP.Application.csproj" Id="0dd7af06-679f-4655-9ab7-faf35a90b7b3" />
+  <Project Path="../TransGGP.Domain/TransGGP.Domain.csproj" Id="7ed304b1-3879-4428-8015-f8e6f632084b" />
+  <Project Path="../TransGGP.Infrastructure/TransGGP.Infrastructure.csproj" Id="4509a057-45cf-4d96-8792-f82f37e6640f" />
   <Project Path="TransGGP.Web.csproj" />
 </Solution>
