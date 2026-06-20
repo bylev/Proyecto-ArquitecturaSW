@@ -5,3 +5,10 @@ obj/
 *.suo
 *.userosscache
 *.sln.docstates
+
+# Archivos de configuración con credenciales (NO SUBIR A GIT)
+appsettings.json
+appsettings.*.json
+.env
+.env.local
+*.env
