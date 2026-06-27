@@ -1,0 +1,31 @@
+@model List<TransGGP.Domain.Models.Servicio>
+
+<h1>Servicios de transporte</h1>
+
+<a asp-action="Create" class="btn btn-primary mb-3">+ Registrar servicio</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>N° Embarque</th>
+            <th>Origen</th>
+            <th>Destino</th>
+            <th>Fecha carga</th>
+            <th>Estatus</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var s in Model)
+        {
+            <tr>
+                <td>@s.Id</td>
+                <td>@s.NumeroEmbarque</td>
+                <td>@s.Origen</td>
+                <td>@s.Destino</td>
+                <td>@s.FechaCarga.ToShortDateString()</td>
+                <td>@s.Estatus</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -73,8 +73,16 @@ namespace TransGGP.Web.Controllers
         [HttpPost]
         public IActionResult Delete(int id)
         {
-            _clienteService.EliminarCliente(id); // Llama al servicio para eliminar un cliente por id
-            return RedirectToAction("Index"); // Redirige a la acción Index después de eliminar
+            try
+            {
+                _clienteService.EliminarCliente(id);
+            }
+            catch (Exception)
+            {
+                // La base restringe el borrado si el cliente tiene servicios (historial)
+                TempData["Error"] = "No se puede eliminar: este cliente tiene servicios registrados.";
+            }
+            return RedirectToAction("Index");
         }
     }
 }
