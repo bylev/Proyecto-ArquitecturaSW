@@ -1,0 +1,32 @@
+@model List<TransGGP.Domain.Models.Unidad>
+
+<h1>Unidades</h1>
+
+<a asp-action="Create" class="btn btn-primary mb-3">+ Nueva unidad</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Clave</th>
+            <th>Placa</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var u in Model)
+        {
+            <tr>
+                <td>@u.Id</td>
+                <td>@u.Clave</td>
+                <td>@u.Placa</td>
+                <td>
+                    <form asp-action="Delete" method="post" onsubmit="return confirm('¿Eliminar esta unidad?');">
+                        <input type="hidden" name="id" value="@u.Id" />
+                        <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

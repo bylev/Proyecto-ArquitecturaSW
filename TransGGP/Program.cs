@@ -17,14 +17,27 @@ builder.Services.AddInfrastructure(connectionString);
 builder.Services.AddScoped<ClienteRepository>();
 
 // PATRÓN DECORATOR: cuando alguien pida IClienteRepository, se le entrega
-// el decorador de logging, que envuelve al ClienteRepository real.N
+// el decorador de logging, que envuelve al ClienteRepository real.N1
 builder.Services.AddScoped<IClienteRepository>(provider =>
     new ClienteRepositoryLoggingDecorator(
         provider.GetRequiredService<ClienteRepository>(),
         provider.GetRequiredService<ILogger<ClienteRepositoryLoggingDecorator>>()));
 
 builder.Services.AddScoped<ClienteService>();
-builder.Services.AddControllersWithViews();
+
+// Repositorios y servicios de Operador, Unidad y Servicio
+builder.Services.AddScoped<IOperadorRepository, OperadorRepository>();
+builder.Services.AddScoped<OperadorService>();
+builder.Services.AddScoped<IUnidadRepository, UnidadRepository>();
+builder.Services.AddScoped<UnidadService>();
+builder.Services.AddScoped<IServicioRepository, ServicioRepository>();
+builder.Services.AddScoped<ServicioService>();
+
+builder.Services.AddControllersWithViews(options =>
+{
+    // Los campos string no incluidos en el formulario no se marcan como obligatorios
+    options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+});
 
 var app = builder.Build();
 

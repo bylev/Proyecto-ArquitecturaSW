@@ -1,0 +1,32 @@
+@model List<TransGGP.Domain.Models.Operador>
+
+<h1>Operadores</h1>
+
+<a asp-action="Create" class="btn btn-primary mb-3">+ Nuevo operador</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Número de operador</th>
+            <th>Nombre</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var op in Model)
+        {
+            <tr>
+                <td>@op.Id</td>
+                <td>@op.NumeroOperador</td>
+                <td>@op.Nombre</td>
+                <td>
+                    <form asp-action="Delete" method="post" onsubmit="return confirm('¿Eliminar este operador?');">
+                        <input type="hidden" name="id" value="@op.Id" />
+                        <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,17 @@
+@model TransGGP.Domain.Models.Unidad
+
+<h1>Nueva Unidad</h1>
+
+<form asp-action="Create" method="post">
+    <div class="mb-3">
+        <label asp-for="Clave" class="form-label">Clave</label>
+        <input asp-for="Clave" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Placa" class="form-label">Placa</label>
+        <input asp-for="Placa" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>

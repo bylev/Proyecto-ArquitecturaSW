@@ -1,0 +1,17 @@
+@model TransGGP.Domain.Models.Operador
+
+<h1>Nuevo Operador</h1>
+
+<form asp-action="Create" method="post">
+    <div class="mb-3">
+        <label asp-for="NumeroOperador" class="form-label">Número de operador</label>
+        <input asp-for="NumeroOperador" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Nombre" class="form-label">Nombre</label>
+        <input asp-for="Nombre" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
