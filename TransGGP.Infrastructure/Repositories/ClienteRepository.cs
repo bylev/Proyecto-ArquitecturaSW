@@ -28,5 +28,15 @@ namespace TransGGP.Infrastructure.Repositories
             _context.Clientes.Add(cliente);
             _context.SaveChanges();
         }
+
+        public void Eliminar(int id)
+        {
+            var cliente = _context.Clientes.Find(id);
+            if (cliente != null)
+            {
+                _context.Clientes.Remove(cliente);
+                _context.SaveChanges();
+            }
+        }
     }
 }
