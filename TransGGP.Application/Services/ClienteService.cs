@@ -27,5 +27,10 @@ namespace TransGGP.Application.Services
             _clienteRepository.Agregar(cliente);
             return cliente;
         } 
-    }
+
+        public void EliminarCliente(int id)
+        {
+            _clienteRepository.Eliminar(id);
+        }
+}
 }
