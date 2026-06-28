@@ -67,6 +67,17 @@ namespace TransGGP.Web.Controllers
             return View(cliente); // Retorna la vista con el cliente encontrado
         }
 
+        // POST Edit: recibe los cambios y guarda
+        [HttpPost]
+        public IActionResult Edit(Cliente cliente)
+        {
+            if (!ModelState.IsValid)
+                return View(cliente); // si no es válido, vuelve a mostrar el formulario
+
+            _clienteService.ActualizarCliente(cliente);
+            return RedirectToAction("Index");
+        }
+
         // POST Delete
         [HttpPost]
         public IActionResult Delete(int id)

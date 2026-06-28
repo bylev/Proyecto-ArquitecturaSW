@@ -23,10 +23,13 @@
                 <td>@cliente.Nombre</td>
                 <td>@cliente.FechaCreacion.ToShortDateString()</td>
                 <td>
-                    <form asp-action="Delete" method="post" onsubmit="return confirm('¿Eliminar este cliente?');">
-                        <input type="hidden" name="id" value="@cliente.Id" />
-                        <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
-                    </form>
+                    <div class="d-flex gap-2">
+                        <a asp-action="Edit" asp-route-id="@cliente.Id" class="btn btn-warning btn-sm">Editar</a>
+                        <form asp-action="Delete" method="post" onsubmit="return confirm('¿Eliminar este cliente?');">
+                            <input type="hidden" name="id" value="@cliente.Id" />
+                            <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                        </form>
+                    </div>
                 </td>
             </tr>
         }
