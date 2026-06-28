@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TransGGP.Application.Services;
-using TransGGP.Application.Reports;
 using TransGGP.Domain.Models;
+using TransGGP.Application.Interfaces;
+using TransGGP.Application.Reports;
 
 namespace TransGGP.Web.Controllers
 {
@@ -40,10 +41,7 @@ namespace TransGGP.Web.Controllers
             return RedirectToAction("Index"); // tras guardar, redirige a la lista
         }
 
-        // GET Reporte: usa el PATRÓN FACTORY METHOD para generar el reporte
-        // en el formato pedido (texto o csv). El controlador NO sabe cómo se
-        // arma cada formato: solo elige el "creador" y le pide el resultado.
-        [HttpGet]
+         [HttpGet]
         public IActionResult Reporte(string formato = "texto")
         {
             List<Cliente> clientes = _clienteService.ObtenerTodos();
@@ -56,7 +54,7 @@ namespace TransGGP.Web.Controllers
             return Content(contenido, "text/plain"); // muestra el texto en el navegador
         }
 
-        // Acciones que reciben un id : Edit y Delete
+
         // GET Edit
         [HttpGet]
         public IActionResult Edit(int id)
