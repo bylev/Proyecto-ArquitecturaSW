@@ -1,7 +1,5 @@
 # ADR-03: Incorporación de una API REST con ASP.NET Core Web API
 
-# ADR-04: Implementación de API REST con ASP.NET Core Web API y Swagger
-
 | Campo  | Valor |
 |--------|-------|
 | Autor  | Michelle Cámara González |
@@ -12,7 +10,7 @@
 
 ## Contexto
 
-TransGGP es un sistema web de gestión de servicios de transporte de carga para Transportes GGP. En el ADR-03 se adoptó la arquitectura hexagonal (Ports and Adapters), que permite agregar nuevas formas de acceder al sistema sin modificar la lógica de negocio central.
+TransGGP es un sistema web de gestión de servicios de transporte de carga para Transportes GGP. Previamente se adoptó la arquitectura hexagonal (Ports and Adapters) —documentada en el ADR-04—, que permite agregar nuevas formas de acceder al sistema sin modificar la lógica de negocio central.
 
 Se identifica la necesidad de exponer funcionalidades del sistema a través de una **API REST**, que permita:
 - Que clientes externos (futuras aplicaciones móviles, sistemas de terceros) accedan a los datos
@@ -134,7 +132,7 @@ TransGGP.API/
 
 ![API REST en Swagger](images/API.png)
 ![Prueba GET en Swagger](images/GET.png)
-![Prueba POST en Swagger](images/POST.png)
+![Prueba POST en Swagger](images/POST1.png)
 ![Prueba POST en Swagger Resultado](images/POST2.png)
 
 # Claúsula de IA
