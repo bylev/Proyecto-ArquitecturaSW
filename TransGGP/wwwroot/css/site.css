@@ -58,6 +58,13 @@ h3 { font-size: 1.6rem; }
   box-shadow: 0 12px 30px rgba(27, 42, 74, .15);
 }
 
+/* Logo transparente en la portada: sin caja, sombra ni recorte */
+.hero-logo {
+  width: 100%;
+  max-height: 360px;
+  object-fit: contain;        /* se ve completo, conservando el fondo transparente */
+}
+
 /* Botones editoriales de la portada (estilo BOOKSAW) */
 .btn-hero {
   display: inline-block;
