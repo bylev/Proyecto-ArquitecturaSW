@@ -13,6 +13,7 @@
             <th>Destino</th>
             <th>Fecha carga</th>
             <th>Estatus</th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
@@ -25,6 +26,9 @@
                 <td>@s.Destino</td>
                 <td>@s.FechaCarga.ToShortDateString()</td>
                 <td>@s.Estatus</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@s.Id" class="btn btn-warning btn-sm">Editar</a>
+                </td>
             </tr>
         }
     </tbody>

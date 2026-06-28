@@ -55,6 +55,36 @@ namespace TransGGP.Web.Controllers
             return RedirectToAction("Index");
         }
 
+        // GET Edit: muestra el formulario con los datos del servicio
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var servicio = _servicioService.ObtenerPorId(id);
+            if (servicio == null)
+                return NotFound();
+
+            CargarDropdowns();
+            return View(servicio);
+        }
+
+        // POST Edit: recibe los cambios y guarda
+        [HttpPost]
+        public IActionResult Edit(Servicio servicio)
+        {
+            if (!ModelState.IsValid)
+            {
+                CargarDropdowns();
+                return View(servicio);
+            }
+
+            // Red de seguridad: evita fechas inválidas para MySQL
+            if (servicio.FechaCarga < new DateTime(2000, 1, 1)) servicio.FechaCarga = DateTime.Now;
+            if (servicio.FechaEntrega < new DateTime(2000, 1, 1)) servicio.FechaEntrega = DateTime.Now;
+
+            _servicioService.ActualizarServicio(servicio);
+            return RedirectToAction("Index");
+        }
+
         // Nota: los servicios NO se eliminan. Son historial para analizar
         // el crecimiento de la empresa (registro permanente / append-only).
 
