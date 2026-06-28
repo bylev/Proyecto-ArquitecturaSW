@@ -1,54 +1,58 @@
-# ADR-04: Patrones de diseño GOF (Decorator y Factory Method)
+# ADR-04: Migración a Arquitectura Hexagonal (Puertos y Adaptadores)
 
 | Campo  | Valor |
 |--------|-------|
-| Autor  | Michelle Cámara |
-| Fecha  | 26/06/2026 |
-| Estado | `Propuesto` |
+| Autor  | Michelle Cámara González |
+| Fecha  | 18/06/2026 |
+| Estado | `Aceptado` |
 
 ---
 
 ## Contexto
 
-**TransGGP** es un sistema web de gestión de servicios de transporte de carga desarrollado para un emprendimiento familiar que opera un tráiler. Actualmente, el negocio registra todos sus viajes en un archivo *Excel* con macros, lo que genera tres problemas principales: solo una persona puede usarlo a la vez, no es accesible desde dispositivos móviles y existe riesgo de pérdida de información.
+**TransGGP** es un sistema web de gestión de servicios de transporte de carga para un emprendimiento familiar que opera un tráiler. En el **ADR-01** se eligió el patrón **MVC** con ASP.NET Core como punto de partida y, en ese momento, la **Arquitectura Hexagonal** se descartó por considerarse *demasiado compleja para una desarrolladora principiante*, dejándola como una evolución futura.
 
-En los ADR anteriores se definió el stack inicial (MVC), las vistas arquitectónicas, la **Arquitectura Hexagonal** y la exposición mediante **API REST + Swagger**. Sobre esa base ya se construyeron los módulos de **Clientes, Operadores, Unidades y Servicios** (CRUD en MVC y API), y se normalizó la base de datos con **llaves foráneas** que relacionan los servicios con sus catálogos.
+Conforme el proyecto avanzó, esa evolución dejó de ser opcional. Aparecieron dos necesidades concretas que el MVC en un solo proyecto no resolvía bien:
 
-Con el sistema funcionando aparecieron dos necesidades transversales que no encajaban en una sola capa: por un lado, **registrar (loguear)** cada operación que toca la base de datos para auditar y depurar, sin ensuciar la lógica del repositorio; y por otro, **generar reportes** de los datos en distintos formatos (texto, CSV y, a futuro, PDF) sin que el controlador conozca los detalles de cada formato. Además, existe el requer**patrones dediseño GOF**.
+- Se requería exponer el sistema **también como API REST** (para una futura app móvil y para el requerimiento académico), es decir, **dos formas de entrada distintas** —web MVC y API— que debían compartir exactamente la misma lógica de negocio sin duplicarla.
+- La lógica del negocio (cómo se registran clientes, operadores, unidades y servicios) estaba mezclada con detalles de infraestructura (Entity Framework Core, MySQL), lo que dificultaba probar el sistema y volvía riesgoso cualquier cambio en la base de datos.
 
-Este ADR documenta la decisión de incorporar dos patrones GOF que aprovechan el desacoplamiento que ya ofrece la arquitectura hex
+Mantener todo en un solo proyecto MVC implicaba que, al agregar la API, se duplicara código o que la lógica quedara amarrada al framework web. Por eso se decide **reorganizar el sistema hacia una Arquitectura Hexagonal (Puertos y Adaptadores)**, revirtiendo de forma consciente la postura del ADR-01 una vez que se entendió que el costo de aprendizaje se justificaba por el beneficio.
+
+Las restricciones que influyeron en esta decisión son: tiempo de desarrollo de tres meses, una desarrolladora principiante, el stack ya elegido (.NET + Entity Framework Core + MySQL) y la necesidad de soportar varios adaptadores de entrada (web y API) sin reescribir la lógica.
 
 ---
 
 ## Decisión
 
-Se adoptan **dos patrones de diseño GOF**, uno de cada categoría principal:
+Se **migra la solución a una Arquitectura Hexagonal (Ports and Adapters)**, separando el sistema en proyectos independientes según su responsabilidad, donde el **dominio** queda en el centro y todo lo externo (base de datos, web, API) se conecta a él mediante **puertos** (interfaces) y **adaptadores** (implementaciones).
 
-* **Decorator** (patrón *estructural*) para agregar *logging* a la capa de persistencia. Se implementa la clase `ClienteRepositoryLoggingDecorator`, que implementa la misma interfaz `IClienteRepository` y **envuelve** al repositorio real (`ClienteRepository`), añadiendo registros antedespués de cada positoriooriginal. Se activa desde la **inyección de dependencias**: cuando alguien pide un `IClienteRepository`, el contenedor entrega el decorador, que internamente delega en el repositorio real
+| Proyecto | Rol en la arquitectura | Responsabilidad |
+|----------|------------------------|-----------------|
+| `TransGGP.Domain` | Núcleo | Entidades del negocio (Cliente, Operador, Unidad, Servicio…). Sin dependencias externas. |
+| `TransGGP.Application` | Núcleo | Casos de uso (*Services*) y **puertos** (interfaces de repositorio, ej. `IClienteRepository`). |
+| `TransGGP.Infrastructure` | Adaptador de salida | Persistencia con Entity Framework Core + MySQL (Pomelo); implementa los puertos de repositorio. |
+| `TransGGP.Web` | Adaptador de entrada | Interfaz MVC con vistas Razor + Bootstrap. |
+| `TransGGP.API` | Adaptador de entrada | API REST documentada con Swagger. |
 
-* **Factory Method** (patrón *creacional*) para la generación de reportes. Se define un *creator* abstracto `ReporteCreator` que declara el método fábrica `CrearReporte()`, y dos *creators* concretos (`ReporteTextoCreator` y `ReporteCsvCreator`) que deciden qué **producto** fabricar (`ReporteTexto` o `ReporteCsv`, ambos implementan `IReporte`). El controlador solo elige el *creator* según el formato pedido y solicito se arma cadauno.
-
----
+La regla central es la **dirección de las dependencias**: `Web` y `API` dependen de `Application`, y `Application` define interfaces que `Infrastructure` implementa. El dominio **no depende de nadie**; son los adaptadores los que dependen del núcleo, nunca al revés.
 
 ## ¿Por qué?
 
-La característica concreta que resuelve cada problema es el **desacoplamiento del comportamiento respecto del código que ya existe**.
+La característica concreta que resuelve el problema de TransGGP es que la Arquitectura Hexagonal permite **agregar nuevos adaptadores de entrada sin tocar la lógica de negocio**. Gracias a esto, la interfaz web MVC y la API REST son simplemente dos adaptadores que consumen los **mismos** casos de uso de `Application`, eliminando la duplicación de código que habría provocado un MVC monolítico.
 
-El **Decorator** se eligió porque la arquitectura hexagonal ya define el puerto `IClienteRepository`. Eso permite envolver la implementacióle la mismainterfaz y le agrega logging, **sin tocar ni una línea** del
-repositorio origede activar odesactivar solo cambiando el registro en la inyección de dependencias, cumpliendo el principio *Open/Closed*: el repositorio queda abierto a extensión pero cerrado a modificación.
+Además, al definir los repositorios como **puertos** (interfaces) en `Application` e implementarlos en `Infrastructure`, la lógica de negocio queda aislada de Entity Framework Core y MySQL. Esto facilita probar los casos de uso y, llegado el caso, cambiar de base de datos o de ORM sin reescribir el dominio. Este mismo desacoplamiento es el que después permitió aplicar el patrón **Decorator** sobre el puerto `IClienteRepository` (ver ADR-05).
 
-El **Factory Method** se eligió porque los reportes comparten una misma operación (generarse a partir de una lista de clientes) pero cambian en el formato de salida. Encapsular la creación de cada formato en un *creator* concreto permite agregar un nuevo formato —por ejemplo, PDF— creando solo una subclase nueva, **sin modificar** el controlador ni los reportes existentes. Esto evita que el controlador acumule condicionales (`if`) por cada formato.
+Aunque el ADR-01 había descartado esta arquitectura por su complejidad, la práctica demostró que el costo de aprendizaje era manejable y que el beneficio —reutilizar la lógica entre web y API— era indispensable para el rumbo del proyecto.
 
 ### Alternativas consideradas
 
 | Alternativa | Por qué la descarté |
 |-------------|---------------------|
-| **Logging directo dentro del repositorio** | Mezcla dos responsabilidades (acceder a datos y registrar), viola *Single Responsibility* y obliga a modificar el repositorio cada vez que cambie la forma de loguear. |
-| **Programación orientada a aspectos (AOP)** | Resuelve el *cross-cutting concern*, pero agrega una librería y
-complejidad (int para el alcancedel proyecto y una desarrolladora principiante. |
-| **Patrón Strategy para reportes** | Strategy intercambia algoritmos, pero aquí el problema es *crear* el objeto correcto según el formato, no intercambiar un comportamiento. Factory Method modela mejor la creación de productos. |
-| **Condicionales (if/switch) en el controlador** | Funciona al inicio, pero el controlador crece con un `if` por cada formato nuevo y rompe *Open/Closed*. |
-| **Singleton para el servicio de reportes** | No aporta nada: el contenedor de dependencias de ASP.NET ya gestiona el ciclo de vida de los servicios. |
+| **Mantener MVC en un solo proyecto** | Era lo más rápido al inicio, pero al agregar la API obligaba a duplicar la lógica de negocio o a amarrarla al framework web. No escala hacia múltiples adaptadores de entrada. |
+| **Arquitectura en capas tradicional (N-capas)** | Separa presentación, negocio y datos, pero normalmente la capa de negocio termina dependiendo de la de datos. No invierte las dependencias, así que el dominio seguiría acoplado a Entity Framework. |
+| **Clean Architecture / Onion** | Muy similar y igualmente válida, pero agrega más capas y reglas (casos de uso, gateways, presenters) que suponen más complejidad de la necesaria para el alcance actual y una desarrolladora principiante. Hexagonal logra el mismo aislamiento con menos ceremonia. |
+| **Microservicios** | Separar cada módulo en un servicio independiente con su propia base de datos es excesivo para un sistema de bajo volumen operado por una familia. Agrega complejidad de despliegue y comunicación sin beneficio real en esta etapa. |
 
 ---
 
@@ -56,37 +60,32 @@ complejidad (int para el alcancedel proyecto y una desarrolladora principiante. 
 
 **✅ Lo que gano:**
 
-- **Técnica**: El logging se agrega y se quita sin modificar el repositorio, solo cambiando el registro de dependencias. Los reportes admiten nuevos formatos creando una subclase, sin tocar el controlador. Ambos patrones refuerzan *Open/Closed*.
-- **Proceso**: Cada patrón vive en una clase aislada (el decorador y los *creators*), así se entiende, explica y prueba de forma independiente, lo que facilita el mantenimiento.
-- **Negocio**: La auditoría de operaciones y los reportes en varios formatos aportan valor directo al dueño para analizar
-la operación, y  sin reescribirel núcleo.
+- **Técnica**: La lógica de negocio queda aislada en `Domain` y `Application`. La web MVC y la API REST reutilizan los mismos casos de uso sin duplicar código, y la base de datos se conecta a través de puertos, lo que permite probar y cambiar la infraestructura sin tocar el núcleo.
+- **Proceso**: Cada proyecto tiene una responsabilidad clara, así se desarrolla y se entiende módulo por módulo. Agregar un nuevo adaptador (por ejemplo, la API en el ADR-03) no obliga a modificar el dominio.
+- **Negocio**: El sistema queda preparado para crecer —una futura app móvil consume la misma lógica vía API— lo que respeta la visión de crecimiento del negocio sin reescribir lo ya construido.
 
 **⚠️ Lo que sacrifico o asumo:**
 
-- **Técnica**: A clases eindirección. Para alguien no familiarizado con GOF, seguir el flujo requiere entender primero el patrón. Es complejidad asumida a cambio
-- **Deuda o Riesde logging solose aplica al repositorio de Clientes; auditar también Operadores, Unidades y Servicios requeriría sus propios decoradores. Igualmente, el Factory Method de reportes está implementado parServicios en unafase posterior. Es una deuda de cobertura asumida para el alcance actual.
+- **Técnica**: Hay más proyectos e interfaces que en un MVC simple. Para alguien que empieza, seguir el flujo Adaptador → Caso de uso → Puerto → Repositorio requiere entender primero la idea de puertos y adaptadores. Es complejidad asumida a cambio del desacoplamiento.
+- **Deuda o riesgo**: Esta arquitectura revierte la decisión del ADR-01, por lo que parte del código inicial tuvo que reorganizarse en los nuevos proyectos. Es una inversión de tiempo asumida al inicio para evitar una refactorización mucho mayor más adelante.
 
 ---
 
-## Estructura de carpetas
+## Estructura de la solución
 
 ```text
 TransGGP.sln
-├── TransGGP.Application/
-│   └── Reports/                         ← PATRÓN FACTORY METHOD
-│       ├── IReporte.cs                  (producto abstracto + ReporteTexto, ReporteCsv)
-│       └── ReporteCreator.cs            (creator abstracto + ReporteTextoCrea
-│
-├── TransGGP.Infrastructure/
-│   └── Decorators/                      ← PATRÓN DECORATOR
-│       └── ClienteRepositoryLoggingDecorator.cs
-│
-└── TransGGP.Web/
-    ├── Program.cs                       (registra el decorador en la inyección de dependencias)
-    └── Controllers/
-        └── ClientesController.cs        (acción Reporte: elige el creator según el formato)             
+├── TransGGP.Domain/             ← Núcleo: entidades del negocio (sin dependencias)
+├── TransGGP.Application/        ← Núcleo: casos de uso (Services) + puertos (interfaces)
+├── TransGGP.Infrastructure/     ← Adaptador de salida: EF Core + MySQL (implementa los puertos)
+├── TransGGP.Web/                ← Adaptador de entrada: MVC + Razor + Bootstrap
+└── TransGGP.API/                ← Adaptador de entrada: API REST + Swagger
 ```
+
+## Diagrama
+
+![Arquitectura Hexagonal de TransGGP](images/ArqHexagonal.png)
 
 ## Cláusula de IA
 
-Se utilizó una herramienta de inteligencia artificial como apoyo para implementar los dos patrones GOF en el código existente, para redactar y organizar este ADR. La comprensión de los patrones Decorator y Factory Method se reforzó con las diapositivas del profesor y la documentación de referencia de patrones de diseño.
+Utilicé IA para redactar y organizar este ADR y para comprender mejor cómo separar el sistema en puertos y adaptadores dentro de la Arquitectura Hexagonal. La mayoría del proyecto está realizado con las diapositivas del profesor.
