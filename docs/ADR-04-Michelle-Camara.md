@@ -84,7 +84,7 @@ TransGGP.sln
 
 ## Diagrama
 
-![Arquitectura Hexagonal de TransGGP](images/ArqHexagonal.png)
+![Arquitectura Hexagonal de TransGGP](./images/ArqHexagonal.png)
 
 ## Cláusula de IA
 
