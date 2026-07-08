@@ -26,7 +26,9 @@ graph TB
     Admin[Administrador]
     Capturista[Capturista]
 
-    subgraph TransportesGGP["TransportesGGP"]
+    Cloudflare["Cloudflare - DNS y proxy del dominio"]
+
+    subgraph EC2["AWS EC2"]
         Web["TransGGP.Web - Aplicación MVC con Razor Views"]
         API["TransGGP.API - API REST con Swagger"]
         App["TransGGP.Application - Lógica de negocio y servicios"]
@@ -34,14 +36,16 @@ graph TB
         Infra["TransGGP.Infrastructure - Acceso a datos con EF Core"]
     end
 
-    DB[(MySQL)]
+    RDS[("AWS RDS - MySQL")]
 
-    Admin -->|Usa| Web
-    Capturista -->|Usa| Web
+    Admin -->|Usa| Cloudflare
+    Capturista -->|Usa| Cloudflare
+    Cloudflare -->|Proxy HTTPS| Web
     Web --> App
     API --> App
     App --> Domain
     App --> Infra
     Infra --> Domain
-    Infra -->|Lee y escribe| DB
+    Infra -->|Lee y escribe| RDS
+
 ```
