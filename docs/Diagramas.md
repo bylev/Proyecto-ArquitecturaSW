@@ -99,4 +99,4 @@ En este nivel, se muestra los componentes de la arquitectura, es decir, las apli
 
 ## Claúsula de IA
 
-En este diagrama, se utilizó Inteligencia Artificial para generar entender la estructura y la sintaxis de mermaid como código. Además que corrigió alguna sintaxis errónea ya escrita.
+En este diagrama, se utilizó Inteligencia Artificial para generar entender la estructura y la sintaxis de mermaid como código. Además que corrigió alguna sintaxis errónea ya escrita. 
