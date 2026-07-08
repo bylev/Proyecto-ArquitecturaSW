@@ -6,18 +6,16 @@ El modelo C4 es una forma de representar la arquitectura de un sistema de softwa
 
 ## Nivel 1
 
-```mermaid
-C4Context
-    title TransGGP — Contexto del Sistema
-
-    %% Definición de Personas en la parte superior
-    Person(admin, "Administrador", "Gestiona clientes, operadores,<br/>unidades y servicios.")
-    %% Sistema principal abajo
-    System(transggp, "TransGGP", "Sistema web para gestionar<br/>el transporte de carga.")
-
-    Person(consulta, "Usuario de Consulta", "Consulta servicios<br/>y catálogos.")
-
-    %% Relaciones apuntando hacia abajo (Rel_D = Down) para forzar un diseño vertical limpio
-    Rel_D(admin, transggp, "Usa", "Navegador web")
-    Rel_D(consulta, transggp, "Usa", "Navegador web")
+```graph TD
+    admin["🧑‍💼 Administrador<br/><small>Gestiona clientes, operadores,<br/>unidades y servicios</small>"]
+    consulta["🧑 Usuario de Consulta<br/><small>Consulta servicios y catálogos</small>"]
+    transggp["🖥️ TransGGP<br/><small>Sistema web para gestionar<br/>el transporte de carga</small>"]
+    db[("🗄️ MySQL<br/><small>Base de datos</small>")]
+    admin -->|Usa - Navegador web| transggp
+    consulta -->|Usa - Navegador web| transggp
+    transggp -->|Lee y escribe| db
+    style admin fill:#08427b,stroke:#052e56,color:#fff
+    style consulta fill:#08427b,stroke:#052e56,color:#fff
+    style transggp fill:#1168bd,stroke:#0b4884,color:#fff
+    style db fill:#438dd5,stroke:#2e6295,color:#fff
 ```
