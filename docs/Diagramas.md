@@ -11,9 +11,10 @@ C4Context
     title TransGGP — Contexto del Sistema
 
     Person(admin, "Administrador", "Usa el sistema para gestionar clientes, operadores, unidades y servicios.")
-    Person(consulta, "Usuario de Consulta", "Consulta servicios y catálogos.")
 
     System(transggp, "TransGGP", "Sistema web para gestionar el transporte de carga.")
+
+    Person(consulta, "Usuario de Consulta", "Consulta servicios y catálogos.")
 
     Rel(admin, transggp, "Usa", "Navegador web")
     Rel(consulta, transggp, "Usa", "Navegador web")
