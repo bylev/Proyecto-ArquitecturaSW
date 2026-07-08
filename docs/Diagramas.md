@@ -57,75 +57,42 @@ En este nivel, se muestra los contenedores de la arquitectura, es decir, las apl
 
 ```mermaid
 graph TB
-    Admin[Administrador]
-    Capturista[Capturista]
-
-    subgraph Web["TransGGP.Web - Adaptador de entrada MVC"]
-        HC[HomeController]
+    subgraph Web["TransGGP.Web"]
         CC[ClientesController]
         OC[OperadoresController]
         UC[UnidadesController]
         SC[ServiciosController]
-        Views[Razor Views]
     end
 
-    subgraph API["TransGGP.API - Adaptador de entrada REST"]
+    subgraph API["TransGGP.API"]
         ClientesAPI[ClientesApiController]
-        Swagger[Swagger]
-        DTO[ClienteCreateDto]
     end
 
-    subgraph Application["TransGGP.Application - Núcleo: casos de uso"]
-        CS[ClienteService]
-        OS[OperadorService]
-        US[UnidadService]
-        SS[ServicioService]
-        ICR[IClienteRepository - Puerto]
-        IOR[IOperadorRepository - Puerto]
-        IUR[IUnidadRepository - Puerto]
-        ISR[IServicioRepository - Puerto]
-        subgraph FactoryMethod["Factory Method"]
-            RC[ReporteCreator]
-            RTC[ReporteTextoCreator]
-            RCC[ReporteCsvCreator]
-            IR[IReporte]
-        end
+    subgraph Application["TransGGP.Application"]
+        Services[ClienteService / OperadorService / UnidadService / ServicioService]
+        Puertos[IClienteRepository / IOperadorRepository / IUnidadRepository / IServicioRepository]
+        Factory["Factory Method: ReporteCreator → ReporteTexto, ReporteCsv"]
     end
 
-    subgraph Infrastructure["TransGGP.Infrastructure - Adaptador de salida"]
-        CR[ClienteRepository]
-        OR[OperadorRepository]
-        UR[UnidadRepository]
-        SR[ServicioRepository]
-        subgraph Decorator["Decorator"]
-            CRLD[ClienteRepositoryLoggingDecorator]
-        end
+    subgraph Infrastructure["TransGGP.Infrastructure"]
+        Repos[ClienteRepository / OperadorRepository / UnidadRepository / ServicioRepository]
+        Decorator["Decorator: ClienteRepositoryLoggingDecorator"]
         DbCtx[ApplicationDbContext]
     end
 
     RDS[("AWS RDS - MySQL")]
 
-    Admin -->|Usa| Web
-    Capturista -->|Usa| Web
-    CC --> CS
-    OC --> OS
-    UC --> US
-    SC --> SS
-    CC --> RC
-    ClientesAPI --> CS
-    CS --> ICR
-    OS --> IOR
-    US --> IUR
-    SS --> ISR
-    ICR -.->|Decorator envuelve| CRLD
-    CRLD -->|Delega| CR
-    IOR -.-> OR
-    IUR -.-> UR
-    ISR -.-> SR
-    CR --> DbCtx
-    OR --> DbCtx
-    UR --> DbCtx
-    SR --> DbCtx
+    CC --> Services
+    OC --> Services
+    UC --> Services
+    SC --> Services
+    CC --> Factory
+    ClientesAPI --> Services
+    Services --> Puertos
+    Puertos -.-> Decorator
+    Decorator --> Repos
+    Repos --> DbCtx
     DbCtx -->|EF Core| RDS
+
 ```
 En este nivel, se muestra los componentes de la arquitectura, es decir, las aplicaciones, bases de datos, etc. En este caso, se muestra el frontend, la api, la base de datos, etc. Y además, los patrones de diseño que se utilizan en cada componente y como se comunican entre sí para lograr la funcionalidad del sistema.
