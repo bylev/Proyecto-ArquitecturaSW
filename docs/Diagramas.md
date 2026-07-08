@@ -15,6 +15,33 @@ TransportesGGP[TransportesGGP - Sistema de gestión de servicios de transporte d
 
 Admin --> |Usa| TransportesGGP
 Consulta -->|Usa| TransportesGGP
- 
 
+```
+En este nivel, se muestra los usuarios Administrador y Capturista, los cuales interactuan con el sistema de gestión de servicios de transporte de carga. 
+
+## Nivel 2
+
+```mermaid
+graph TB
+    Admin[Administrador]
+    Capturista[Capturista]
+
+    subgraph TransportesGGP["TransportesGGP"]
+        Web["TransGGP.Web - Aplicación MVC con Razor Views"]
+        API["TransGGP.API - API REST con Swagger"]
+        App["TransGGP.Application - Lógica de negocio y servicios"]
+        Domain["TransGGP.Domain - Entidades del dominio"]
+        Infra["TransGGP.Infrastructure - Acceso a datos con EF Core"]
+    end
+
+    DB[(MySQL)]
+
+    Admin -->|Usa| Web
+    Capturista -->|Usa| Web
+    Web --> App
+    API --> App
+    App --> Domain
+    App --> Infra
+    Infra --> Domain
+    Infra -->|Lee y escribe| DB
 ```
