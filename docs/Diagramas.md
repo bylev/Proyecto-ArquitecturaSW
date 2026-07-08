@@ -96,3 +96,7 @@ graph TB
 
 ```
 En este nivel, se muestra los componentes de la arquitectura, es decir, las aplicaciones, bases de datos, etc. En este caso, se muestra el frontend, la api, la base de datos, etc. Y además, los patrones de diseño que se utilizan en cada componente y como se comunican entre sí para lograr la funcionalidad del sistema.
+
+## Claúsula de IA
+
+En este diagrama, se utilizó Inteligencia Artificial para generar entender la estructura y la sintaxis de mermaid como código. Además que corrigió alguna sintaxis errónea ya escrita.
