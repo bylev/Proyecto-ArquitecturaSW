@@ -10,19 +10,14 @@ El modelo C4 es una forma de representar la arquitectura de un sistema de softwa
 C4Context
     title TransGGP — Contexto del Sistema
 
-    %% 1. Usar <br/> en las descripciones para evitar cajas demasiado anchas
-    Person(admin, "Administrador", "Usa el sistema para gestionar clientes,<br/>operadores, unidades y servicios.")
-    
-    System(transggp, "TransGGP", "Sistema web para gestionar<br/>el transporte de carga.")
-    
+    %% Definición de Personas en la parte superior
+    Person(admin, "Administrador", "Gestiona clientes, operadores,<br/>unidades y servicios.")
     Person(consulta, "Usuario de Consulta", "Consulta servicios<br/>y catálogos.")
-
-    Rel_R(admin, transggp, "Usa", "Navegador web")
-    Rel_L(consulta, transggp, "Usa", "Navegador web")
     
-    UpdateElementStyle(admin, $bgColor="#f8fea3ff", $fontColor="#2a1a18ff", $borderColor="#757260ff")
-    UpdateElementStyle(consulta, $bgColor="#f8fea3ff", $fontColor="#2a1a18ff", $borderColor="#757260ff")
-    UpdateElementStyle(transggp, $bgColor="#f8fea3ff", $fontColor="#2a1a18ff", $borderColor="#757260ff")
-    UpdateRelStyle(admin, transggp, $textColor="#d3d3d3", $lineColor="#d3d3d3")
-    UpdateRelStyle(consulta, transggp, $textColor="#d3d3d3", $lineColor="#d3d3d3")
+    %% Sistema principal abajo
+    System(transggp, "TransGGP", "Sistema web para gestionar<br/>el transporte de carga.")
+
+    %% Relaciones apuntando hacia abajo (Rel_D = Down) para forzar un diseño vertical limpio
+    Rel_D(admin, transggp, "Usa", "Navegador web")
+    Rel_D(consulta, transggp, "Usa", "Navegador web")
 ```
