@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Transportes GGP
 Sistema de gestión de servicios de transporte de carga.
 
@@ -128,9 +127,3 @@ Proyecto-ArquitecturaSW/
 └── README.md
 
 ```
-=======
-# Proyecto-ArquitecturaSW
-
-## Diagramas C4
-[Diagramas C4](https://github.com/bylev/Proyecto-ArquitecturaSW/blob/diagramas/docs/Diagramas.md)
->>>>>>> 70bcb9fff19c049bb6fe703071e5c14c7d51361e
