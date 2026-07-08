@@ -26,7 +26,7 @@ La arquitectura del sistema está compuesta por un patrón de diseño **Hexagona
 
 En esta sección, se muestra el diagrama C4 del sistema, en donde se puede ver la arquitectura del sistema, los componentes y las interacciones entre ellos.
 
-[Diagramas C4](docs/Diagramas.md)
+↪︎ Aquí puedes encontrar los diagramas: [Diagramas C4](docs/Diagramas.md)
 
 # Estructura del Proyecto
 
