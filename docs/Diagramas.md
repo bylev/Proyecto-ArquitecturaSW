@@ -12,10 +12,10 @@ C4Context
 
     %% Definición de Personas en la parte superior
     Person(admin, "Administrador", "Gestiona clientes, operadores,<br/>unidades y servicios.")
-    Person(consulta, "Usuario de Consulta", "Consulta servicios<br/>y catálogos.")
-    
     %% Sistema principal abajo
     System(transggp, "TransGGP", "Sistema web para gestionar<br/>el transporte de carga.")
+
+    Person(consulta, "Usuario de Consulta", "Consulta servicios<br/>y catálogos.")
 
     %% Relaciones apuntando hacia abajo (Rel_D = Down) para forzar un diseño vertical limpio
     Rel_D(admin, transggp, "Usa", "Navegador web")
