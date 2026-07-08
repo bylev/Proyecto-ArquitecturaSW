@@ -10,7 +10,7 @@ El modelo C4 es una forma de representar la arquitectura de un sistema de softwa
 graph TB
 
 Admin[Administrador]
-Consulta[Usuario de Consulta]
+Consulta[Capturista]
 TransportesGGP[TransportesGGP - Sistema de gestión de servicios de transporte de carga]
 
 Admin --> |Usa| TransportesGGP
