@@ -15,9 +15,6 @@ C4Context
 
     System(transggp, "TransGGP", "Sistema web para gestionar el transporte de carga.")
 
-    SystemDb(db, "MySQL", "Guarda toda la información del sistema.")
-
     Rel(admin, transggp, "Usa", "Navegador web")
     Rel(consulta, transggp, "Usa", "Navegador web")
-    Rel(transggp, db, "Lee y escribe", "TCP/IP")
 ```
