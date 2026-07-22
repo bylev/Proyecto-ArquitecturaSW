@@ -12,7 +12,6 @@ namespace TransGGP.Web.Controllers
         private readonly OperadorService _operadorService;
         private readonly UnidadService _unidadService;
 
-        // Se inyectan 4 servicios: el de Servicio + los 3 que llenan los dropdowns
         public ServiciosController(
             ServicioService servicioService,
             ClienteService clienteService,
