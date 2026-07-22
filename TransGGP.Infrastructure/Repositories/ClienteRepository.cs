@@ -29,6 +29,16 @@ namespace TransGGP.Infrastructure.Repositories
             _context.SaveChanges();
         }
 
+        public void Actualizar(Cliente cliente)
+        {
+            var existente = _context.Clientes.Find(cliente.Id);
+            if (existente != null)
+            {
+                existente.Nombre = cliente.Nombre;   // solo el nombre es editable
+                _context.SaveChanges();
+            }
+        }
+
         public void Eliminar(int id)
         {
             var cliente = _context.Clientes.Find(id);

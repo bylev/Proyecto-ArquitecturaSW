@@ -25,7 +25,14 @@
         public int UnidadId { get; set; }
         public int? SemirremolqueId { get; set; }
         public int? DollyId { get; set; }
-        public int ConfiguracionId { get; set; }
-    
+        public int? ConfiguracionId { get; set; }   // opcional
+
+        // Propiedades de navegación (relaciones entre tablas)
+        public Cliente? Cliente { get; set; }                 // obligatoria
+        public Operador? Operador { get; set; }               // obligatoria
+        public Unidad? Unidad { get; set; }                   // obligatoria
+        public Semirremolque? Semirremolque { get; set; }     // opcional
+        public Dolly? Dolly { get; set; }                     // opcional
+        public Configuracion? Configuracion { get; set; }     // opcional
     }
 }

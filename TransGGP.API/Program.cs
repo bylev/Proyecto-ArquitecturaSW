@@ -8,7 +8,11 @@ using TransGGP.Infrastructure.Repositories;
 var builder = WebApplication.CreateBuilder(args);
 
 // Agregar servicios
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    // Permite POST con solo los campos necesarios (campos string omitidos no son obligatorios)
+    options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+});
 
 // DbContext
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -18,6 +22,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Inyección de dependencias
 builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
 builder.Services.AddScoped<ClienteService>();
+builder.Services.AddScoped<IOperadorRepository, OperadorRepository>();
+builder.Services.AddScoped<OperadorService>();
+builder.Services.AddScoped<IUnidadRepository, UnidadRepository>();
+builder.Services.AddScoped<UnidadService>();
+builder.Services.AddScoped<IServicioRepository, ServicioRepository>();
+builder.Services.AddScoped<ServicioService>();
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();

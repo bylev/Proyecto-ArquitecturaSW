@@ -6,7 +6,7 @@ using TransGGP.Domain.Models;
 namespace TransGGP.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api")]
     public class ClientesApiController : ControllerBase
     {
         private readonly ClienteService _clienteService;
@@ -17,7 +17,7 @@ namespace TransGGP.API.Controllers
         }
 
         
-        [HttpGet]
+        [HttpGet("obtenerclientes")]
         public ActionResult<List<Cliente>> ObtenerTodos()
         {
             var clientes = _clienteService.ObtenerTodos();
@@ -25,8 +25,7 @@ namespace TransGGP.API.Controllers
         }
 
       
-        [HttpPost]
- 
+        [HttpPost("crearcliente")]
         public ActionResult<Cliente> CrearCliente([FromBody] ClienteCreateDto clienteDto)
         {
             if (string.IsNullOrWhiteSpace(clienteDto.Nombre))
@@ -40,6 +39,13 @@ namespace TransGGP.API.Controllers
 
             var clienteCreado = _clienteService.RegistrarCliente(cliente);
             return CreatedAtAction(nameof(ObtenerTodos), new { id = clienteCreado.Id }, clienteCreado);
+        }
+
+        [HttpDelete("eliminarcliente/{id}")]
+        public IActionResult Eliminar(int id)
+        {
+            _clienteService.EliminarCliente(id);
+            return NoContent();
         }
     }
 }

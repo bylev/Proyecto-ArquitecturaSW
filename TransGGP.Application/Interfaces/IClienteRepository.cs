@@ -9,7 +9,7 @@ namespace TransGGP.Application.Interfaces
         List<Cliente> ObtenerTodos();
         Cliente? ObtenerPorId(int id);
         void Agregar(Cliente cliente);
-
+        void Actualizar(Cliente cliente);
         void Eliminar(int id);
     }
 }
