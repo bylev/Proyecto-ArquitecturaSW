@@ -1,34 +1,34 @@
 using System.Text;
 using TransGGP.Domain.Models;
 
-namespace TransGGP.Application.Reports
+namespace TransGGP.Application.Interfaces
 {
-    /// <summary>
+
     /// PRODUCTO abstracto del patrón Factory Method.
     /// Define qué sabe hacer cualquier reporte: generarse a partir de clientes.
-    /// </summary>
-    public interface IReporte
+
+    public interface IReporteCreator
     {
         string Generar(List<Cliente> clientes);
     }
 
-    /// <summary>PRODUCTO concreto: reporte en texto plano.</summary>
-    public class ReporteTexto : IReporte
+    // REPORTE TXT
+    public class ReporteTexto : IReporteCreator
     {
         public string Generar(List<Cliente> clientes)
         {
             var sb = new StringBuilder();
-            sb.AppendLine("=== REPORTE DE CLIENTES (TEXTO) ===");
+            sb.AppendLine("=== REPORTE DE CLIENTES ===");
             sb.AppendLine($"Total: {clientes.Count} clientes");
             sb.AppendLine();
             foreach (var c in clientes)
-                sb.AppendLine($"- [{c.Id}] {c.Nombre} (alta: {c.FechaCreacion:dd/MM/yyyy})");
+                sb.AppendLine($"- [{c.Id}] {c.Nombre} (Fecha de creacion: {c.FechaCreacion:dd/MM/yyyy})");
             return sb.ToString();
         }
     }
 
-    /// <summary>PRODUCTO concreto: reporte en formato CSV.</summary>
-    public class ReporteCsv : IReporte
+// Reporte CSV
+    public class ReporteCsv : IReporteCreator
     {
         public string Generar(List<Cliente> clientes)
         {

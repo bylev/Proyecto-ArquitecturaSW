@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TransGGP.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using TransGGP.Infrastructure.Data;
 namespace TransGGP.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260627030905_RelacionesServicio")]
+    partial class RelacionesServicio
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -284,7 +287,7 @@ namespace TransGGP.Infrastructure.Migrations
                     b.HasOne("TransGGP.Domain.Models.Cliente", "Cliente")
                         .WithMany("Servicios")
                         .HasForeignKey("ClienteId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TransGGP.Domain.Models.Configuracion", "Configuracion")
@@ -298,7 +301,7 @@ namespace TransGGP.Infrastructure.Migrations
                     b.HasOne("TransGGP.Domain.Models.Operador", "Operador")
                         .WithMany("Servicios")
                         .HasForeignKey("OperadorId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TransGGP.Domain.Models.Semirremolque", "Semirremolque")
@@ -308,7 +311,7 @@ namespace TransGGP.Infrastructure.Migrations
                     b.HasOne("TransGGP.Domain.Models.Unidad", "Unidad")
                         .WithMany("Servicios")
                         .HasForeignKey("UnidadId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Cliente");

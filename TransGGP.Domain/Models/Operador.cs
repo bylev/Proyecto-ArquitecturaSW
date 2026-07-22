@@ -8,5 +8,8 @@
         public string Nombre { get; set; } = string.Empty;
 
         public DateTime FechaCreacion { get; set; } = DateTime.Now;
+
+        // Un operador puede tener muchos servicios (relación uno-a-muchos)
+        public List<Servicio> Servicios { get; set; } = new();
     }
 }
