@@ -71,7 +71,7 @@ public class UnidadServiceTest
         var servicio = new UnidadService(repositorio);
 
         // Act
-        servicio.EliminarUnidad(10)
+        servicio.EliminarUnidad(10);
 
         // Assert
         Assert.Empty(repositorio.Unidades);
