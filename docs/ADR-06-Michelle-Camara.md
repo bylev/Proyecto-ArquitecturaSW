@@ -1,4 +1,4 @@
-# ADR-06: Deuda técnica identificada en el proyecto
+# ADR-06: Deuda técnica identificada en el proyecto y pruebas unitarias.
 
 | Campo  | Valor |
 |--------|-------|
