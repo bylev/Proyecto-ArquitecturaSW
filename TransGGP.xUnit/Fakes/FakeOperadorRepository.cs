@@ -22,6 +22,17 @@ public class FakeOperadorRepository : IOperadorRepository
         Operadores.Add(operador);
     }
 
+    public void Actualizar(Operador operador)
+    {
+        var existente = ObtenerPorId(operador.Id);
+
+        if (existente is not null)
+        {
+            existente.NumeroOperador = operador.NumeroOperador;
+            existente.Nombre = operador.Nombre;
+        }
+    }
+
     public void Eliminar(int id)
     {
         var operador = ObtenerPorId(id);

@@ -22,6 +22,17 @@ public class FakeUnidadRepository : IUnidadRepository
         Unidades.Add(unidad);
     }
 
+    public void Actualizar(Unidad unidad)
+    {
+        var existente = ObtenerPorId(unidad.Id);
+
+        if (existente is not null)
+        {
+            existente.Clave = unidad.Clave;
+            existente.Placa = unidad.Placa;
+        }
+    }
+
     public void Eliminar(int id)
     {
         var unidad = ObtenerPorId(id);
