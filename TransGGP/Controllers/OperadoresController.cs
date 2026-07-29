@@ -34,6 +34,25 @@ namespace TransGGP.Web.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            Operador? operador = _operadorService.ObtenerPorId(id);
+            if (operador == null)
+                return NotFound();
+            return View(operador);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Operador operador)
+        {
+            if (!ModelState.IsValid)
+                return View(operador);
+
+            _operadorService.ActualizarOperador(operador);
+            return RedirectToAction("Index");
+        }
+
         [HttpPost]
         public IActionResult Delete(int id)
         {
