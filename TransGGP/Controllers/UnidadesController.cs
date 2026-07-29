@@ -34,6 +34,25 @@ namespace TransGGP.Web.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            Unidad? unidad = _unidadService.ObtenerPorId(id);
+            if (unidad == null)
+                return NotFound();
+            return View(unidad);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Unidad unidad)
+        {
+            if (!ModelState.IsValid)
+                return View(unidad);
+
+            _unidadService.ActualizarUnidad(unidad);
+            return RedirectToAction("Index");
+        }
+
         [HttpPost]
         public IActionResult Delete(int id)
         {

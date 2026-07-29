@@ -21,7 +21,8 @@
                 <td>@u.Clave</td>
                 <td>@u.Placa</td>
                 <td>
-                    <form asp-action="Delete" method="post" onsubmit="return confirm('¿Eliminar esta unidad?');">
+                    <a asp-action="Edit" asp-route-id="@u.Id" class="btn btn-primary btn-sm">Editar</a>
+                    <form asp-action="Delete" method="post" onsubmit="return confirm('¿Eliminar esta unidad?');" style="display:inline;">
                         <input type="hidden" name="id" value="@u.Id" />
                         <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
                     </form>
