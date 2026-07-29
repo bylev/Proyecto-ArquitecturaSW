@@ -22,6 +22,11 @@ namespace TransGGP.Application.Services
             return operador;
         }
 
+        public void ActualizarOperador(Operador operador)
+        {
+            _operadorRepository.Actualizar(operador);
+        }
+
         public void EliminarOperador(int id) => _operadorRepository.Eliminar(id);
     }
 }

@@ -22,6 +22,11 @@ namespace TransGGP.Application.Services
             return unidad;
         }
 
+        public void ActualizarUnidad(Unidad unidad)
+        {
+            _unidadRepository.Actualizar(unidad);
+        }
+
         public void EliminarUnidad(int id) => _unidadRepository.Eliminar(id);
     }
 }
