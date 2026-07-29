@@ -29,6 +29,17 @@ namespace TransGGP.Infrastructure.Repositories
             _context.SaveChanges();
         }
 
+        public void Actualizar(Unidad unidad)
+        {
+            var existente = _context.Unidades.Find(unidad.Id);
+            if (existente != null)
+            {
+                existente.Clave = unidad.Clave;
+                existente.Placa = unidad.Placa;
+                _context.SaveChanges();
+            }
+        }
+
         public void Eliminar(int id)
         {
             var unidad = _context.Unidades.Find(id);

@@ -7,6 +7,7 @@ namespace TransGGP.Application.Interfaces
         List<Operador> ObtenerTodos();
         Operador? ObtenerPorId(int id);
         void Agregar(Operador operador);
+        void Actualizar(Operador operador);
         void Eliminar(int id);
     }
 }

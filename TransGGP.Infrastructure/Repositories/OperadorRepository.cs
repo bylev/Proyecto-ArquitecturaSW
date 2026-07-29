@@ -29,6 +29,17 @@ namespace TransGGP.Infrastructure.Repositories
             _context.SaveChanges();
         }
 
+        public void Actualizar(Operador operador)
+        {
+            var existente = _context.Operadores.Find(operador.Id);
+            if (existente != null)
+            {
+                existente.NumeroOperador = operador.NumeroOperador;
+                existente.Nombre = operador.Nombre;
+                _context.SaveChanges();
+            }
+        }
+
         public void Eliminar(int id)
         {
             var operador = _context.Operadores.Find(id);
