@@ -12,11 +12,13 @@ namespace TransGGP.Web.Controllers
     public class ClientesController : Controller // Hereda de Controller
     {
         private readonly ClienteService _clienteService;
+        private readonly IWebHostEnvironment _entorno;
 
         // Constructor
-        public ClientesController(ClienteService clienteService)
+        public ClientesController(ClienteService clienteService, IWebHostEnvironment entorno)
         {
             _clienteService = clienteService; // Inyección de dependencias del servicio
+            _entorno = entorno;
         }
 
         // Index
@@ -48,16 +50,21 @@ namespace TransGGP.Web.Controllers
         }
 
          [HttpGet]
-        public IActionResult Reporte(string formato = "texto")
+        public IActionResult Reporte(string formato = "pdf")
         {
             List<Cliente> clientes = _clienteService.ObtenerTodos();
 
             ReporteCreator creator = formato == "csv"
                 ? new ReporteCsvCreator()
-                : new ReporteTextoCreator();
+                : new ReportePdfCreator();
 
-            string contenido = creator.GenerarReporte(clientes);
-            return Content(contenido, "text/plain"); // muestra el texto en el navegador
+            byte[]? logo = null;
+            var rutaLogo = Path.Combine(_entorno.WebRootPath, "images", "logo.png");
+            if (System.IO.File.Exists(rutaLogo))
+                logo = System.IO.File.ReadAllBytes(rutaLogo);
+
+            ReporteArchivo archivo = creator.GenerarReporte(clientes, logo);
+            return File(archivo.Contenido, archivo.TipoContenido, archivo.NombreArchivo);
         }
 
 

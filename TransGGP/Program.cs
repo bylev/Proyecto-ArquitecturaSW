@@ -8,6 +8,9 @@ using TransGGP.Infrastructure.Repositories;
 using TransGGP.Infrastructure.Decorators;
 using TransGGP.Infrastructure.Security;
 using TransGGP.Application.Services;
+using QuestPDF.Infrastructure;
+
+QuestPDF.Settings.License = LicenseType.Community;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,6 +51,7 @@ builder.Services.AddScoped<ConfiguracionService>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
 builder.Services.AddScoped<UsuarioService>();
+builder.Services.AddScoped<DashboardService>();
 
 // Autenticación por cookie: guarda la sesión del usuario tras iniciar sesión
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
