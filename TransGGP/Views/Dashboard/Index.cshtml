@@ -1,140 +1,117 @@
 @model TransGGP.Application.Dashboards.DashboardResumen
 
 @{
-    int AnchoBarra(int parte)
-    {
-        if (Model.Total == 0) return 0;
-        return (int)Math.Round((double)parte * 100 / Model.Total);
-    }
+    ViewData["Title"] = "Panel";
+
+    int Grados(int parte) => Model.Total == 0 ? 0 : (int)System.Math.Round(parte * 360.0 / Model.Total);
+    int Pct(int parte) => Model.Total == 0 ? 0 : (int)System.Math.Round(parte * 100.0 / Model.Total);
+
+    var a1 = Grados(Model.Entregados);
+    var a2 = a1 + Grados(Model.EnProceso);
+    var a3 = a2 + Grados(Model.Agendados);
+
+    var maxMes = Model.Meses.Count == 0 ? 0 : Model.Meses.Max(m => m.Total);
 }
 
-<div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+<div class="ggp-page-head">
     <div>
-        <h1 class="mb-0">Panel de análisis</h1>
-        <p class="text-muted mb-0">Servicios de Transportes GGP</p>
+        <div class="ggp-eyebrow">Transportes GGP</div>
+        <h1>Panel de análisis</h1>
     </div>
-    <form asp-action="Index" method="get" class="d-flex align-items-center gap-2">
-        <label class="form-label mb-0">Año</label>
-        <select name="anio" class="form-select" onchange="this.form.submit()">
-            @foreach (var a in Model.AniosDisponibles)
-            {
-                <option value="@a" selected="@(a == Model.Anio)">@a</option>
-            }
-        </select>
-    </form>
+    <div class="d-flex align-items-center gap-2 flex-wrap">
+        <form asp-action="Index" method="get" class="d-flex align-items-center gap-2 mb-0">
+            <label class="form-label mb-0">Año</label>
+            <select name="anio" class="form-select form-select-sm" style="width:auto" onchange="this.form.submit()">
+                @foreach (var a in Model.AniosDisponibles)
+                {
+                    <option value="@a" selected="@(a == Model.Anio)">@a</option>
+                }
+            </select>
+        </form>
+        <a asp-action="Reporte" asp-route-anio="@Model.Anio" class="btn btn-primary btn-sm">Descargar PDF</a>
+    </div>
 </div>
 
-<h4 class="mb-3">Indicadores del año @Model.Anio</h4>
 <div class="row g-3 mb-4">
-    <div class="col-6 col-md">
-        <div class="card text-center shadow-sm">
-            <div class="card-body">
-                <div class="display-6 fw-bold">@Model.Total</div>
-                <div class="text-muted">Total servicios</div>
-            </div>
+    <div class="col-6 col-lg">
+        <div class="kpi-card" style="animation-delay:.02s">
+            <div class="kpi-value" data-contador="@Model.Total">@Model.Total</div>
+            <div class="kpi-label">Total servicios</div>
         </div>
     </div>
-    <div class="col-6 col-md">
-        <div class="card text-center shadow-sm border-success">
-            <div class="card-body">
-                <div class="display-6 fw-bold text-success">@Model.Entregados</div>
-                <div class="text-muted">Entregados</div>
-            </div>
+    <div class="col-6 col-lg">
+        <div class="kpi-card kpi--ok" style="animation-delay:.08s">
+            <div class="kpi-value" data-contador="@Model.Entregados">@Model.Entregados</div>
+            <div class="kpi-label">Entregados</div>
         </div>
     </div>
-    <div class="col-6 col-md">
-        <div class="card text-center shadow-sm border-primary">
-            <div class="card-body">
-                <div class="display-6 fw-bold text-primary">@Model.EnProceso</div>
-                <div class="text-muted">En proceso</div>
-            </div>
+    <div class="col-6 col-lg">
+        <div class="kpi-card kpi--proc" style="animation-delay:.14s">
+            <div class="kpi-value" data-contador="@Model.EnProceso">@Model.EnProceso</div>
+            <div class="kpi-label">En proceso</div>
         </div>
     </div>
-    <div class="col-6 col-md">
-        <div class="card text-center shadow-sm border-warning">
-            <div class="card-body">
-                <div class="display-6 fw-bold text-warning">@Model.Agendados</div>
-                <div class="text-muted">Agendados</div>
-            </div>
+    <div class="col-6 col-lg">
+        <div class="kpi-card kpi--wait" style="animation-delay:.2s">
+            <div class="kpi-value" data-contador="@Model.Agendados">@Model.Agendados</div>
+            <div class="kpi-label">Agendados</div>
         </div>
     </div>
-    <div class="col-6 col-md">
-        <div class="card text-center shadow-sm border-danger">
-            <div class="card-body">
-                <div class="display-6 fw-bold text-danger">@Model.Cancelados</div>
-                <div class="text-muted">Cancelados</div>
-            </div>
+    <div class="col-6 col-lg">
+        <div class="kpi-card kpi--danger" style="animation-delay:.26s">
+            <div class="kpi-value" data-contador="@Model.Cancelados">@Model.Cancelados</div>
+            <div class="kpi-label">Cancelados</div>
         </div>
     </div>
 </div>
 
 <div class="row g-4 mb-4">
     <div class="col-lg-5">
-        <div class="card shadow-sm h-100">
+        <div class="card h-100">
             <div class="card-body">
-                <h5 class="card-title">Distribución por estatus</h5>
-                <p class="text-muted">@Model.PorcentajeEntregados% de los servicios del año fueron entregados.</p>
-
-                <div class="mb-3">
-                    <div class="d-flex justify-content-between"><span>Entregado</span><span>@Model.Entregados</span></div>
-                    <div class="progress" style="height: 18px;">
-                        <div class="progress-bar bg-success" style="width: @AnchoBarra(Model.Entregados)%;"></div>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <div class="d-flex justify-content-between"><span>En proceso</span><span>@Model.EnProceso</span></div>
-                    <div class="progress" style="height: 18px;">
-                        <div class="progress-bar bg-primary" style="width: @AnchoBarra(Model.EnProceso)%;"></div>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <div class="d-flex justify-content-between"><span>Agendado</span><span>@Model.Agendados</span></div>
-                    <div class="progress" style="height: 18px;">
-                        <div class="progress-bar bg-warning" style="width: @AnchoBarra(Model.Agendados)%;"></div>
-                    </div>
-                </div>
-                <div class="mb-1">
-                    <div class="d-flex justify-content-between"><span>Cancelado</span><span>@Model.Cancelados</span></div>
-                    <div class="progress" style="height: 18px;">
-                        <div class="progress-bar bg-danger" style="width: @AnchoBarra(Model.Cancelados)%;"></div>
-                    </div>
+                <h5 class="card-title mb-3">Distribución por estatus</h5>
+                <div class="ggp-donut-wrap">
+                    @if (Model.Total == 0)
+                    {
+                        <div class="ggp-donut" style="background: var(--ggp-line); --a1:0deg; --a2:0deg; --a3:0deg;">
+                            <div class="ggp-donut-centro"><strong>0</strong><span>servicios</span></div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="ggp-donut" style="--a1:@(a1)deg; --a2:@(a2)deg; --a3:@(a3)deg;">
+                            <div class="ggp-donut-centro"><strong>@Model.Total</strong><span>servicios</span></div>
+                        </div>
+                    }
+                    <ul class="ggp-leyenda flex-grow-1">
+                        <li><span class="ggp-punto" style="background:var(--ggp-ok)"></span> Entregado <span class="val">@Model.Entregados · @Pct(Model.Entregados)%</span></li>
+                        <li><span class="ggp-punto" style="background:var(--ggp-proc)"></span> En proceso <span class="val">@Model.EnProceso · @Pct(Model.EnProceso)%</span></li>
+                        <li><span class="ggp-punto" style="background:var(--ggp-wait)"></span> Agendado <span class="val">@Model.Agendados · @Pct(Model.Agendados)%</span></li>
+                        <li><span class="ggp-punto" style="background:var(--ggp-danger)"></span> Cancelado <span class="val">@Model.Cancelados · @Pct(Model.Cancelados)%</span></li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="col-lg-7">
-        <div class="card shadow-sm h-100">
+        <div class="card h-100">
             <div class="card-body">
-                <h5 class="card-title">Resumen mensual @Model.Anio</h5>
-                <div class="table-responsive">
-                    <table class="table table-sm table-striped align-middle">
-                        <thead>
-                            <tr>
-                                <th>Mes</th>
-                                <th class="text-center">Total</th>
-                                <th class="text-center">Entregados</th>
-                                <th class="text-center">En proceso</th>
-                                <th class="text-center">Agendados</th>
-                                <th class="text-center">Cancelados</th>
-                                <th class="text-center">% Entregados</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var m in Model.Meses)
-                            {
-                                <tr>
-                                    <td>@m.Mes</td>
-                                    <td class="text-center">@m.Total</td>
-                                    <td class="text-center">@m.Entregados</td>
-                                    <td class="text-center">@m.EnProceso</td>
-                                    <td class="text-center">@m.Agendados</td>
-                                    <td class="text-center">@m.Cancelados</td>
-                                    <td class="text-center">@m.PorcentajeEntregados%</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                <h5 class="card-title mb-1">Servicios por mes · @Model.Anio</h5>
+                <p class="text-muted mb-3" style="font-size:.85rem">@Model.PorcentajeEntregados% entregados en el año</p>
+                <div class="ggp-bars">
+                    @{ var idx = 0; }
+                    @foreach (var m in Model.Meses)
+                    {
+                        var altura = maxMes == 0 ? 0 : (int)System.Math.Round(m.Total * 100.0 / maxMes);
+                        idx++;
+                        <div class="ggp-bar-col">
+                            <div class="ggp-bar" data-cero="@(m.Total == 0 ? 1 : 0)" style="height:@(altura)%; animation-delay:@(idx * 30)ms">
+                                <span class="ggp-bar-tip">@m.Total</span>
+                            </div>
+                            <div class="ggp-bar-label">@m.Mes.Substring(0, 3)</div>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
@@ -143,59 +120,23 @@
 
 <h4 class="mb-3">Resumen histórico</h4>
 <div class="row g-3 mb-4">
-    <div class="col-6 col-md-2">
-        <div class="card text-center shadow-sm">
-            <div class="card-body">
-                <div class="h3 fw-bold mb-0">@Model.TotalHistorico</div>
-                <div class="text-muted">Total histórico</div>
-            </div>
-        </div>
+    <div class="col-6 col-md-3">
+        <div class="kpi-card"><div class="kpi-value" data-contador="@Model.TotalHistorico">@Model.TotalHistorico</div><div class="kpi-label">Total histórico</div></div>
     </div>
-    <div class="col-6 col-md-2">
-        <div class="card text-center shadow-sm">
-            <div class="card-body">
-                <div class="h3 fw-bold text-success mb-0">@Model.TotalEntregadosHistorico</div>
-                <div class="text-muted">Entregados</div>
-            </div>
-        </div>
+    <div class="col-6 col-md-3">
+        <div class="kpi-card"><div class="kpi-value" data-contador="@Model.ClientesActivos">@Model.ClientesActivos</div><div class="kpi-label">Clientes activos</div></div>
     </div>
-    <div class="col-6 col-md-2">
-        <div class="card text-center shadow-sm">
-            <div class="card-body">
-                <div class="h3 fw-bold text-danger mb-0">@Model.TotalCanceladosHistorico</div>
-                <div class="text-muted">Cancelados</div>
-            </div>
-        </div>
+    <div class="col-6 col-md-3">
+        <div class="kpi-card kpi--wait"><div class="kpi-value" style="font-size:1.3rem">@Model.MesMasActivo</div><div class="kpi-label">Mes más activo</div></div>
     </div>
-    <div class="col-6 col-md-2">
-        <div class="card text-center shadow-sm">
-            <div class="card-body">
-                <div class="h3 fw-bold mb-0">@Model.ClientesActivos</div>
-                <div class="text-muted">Clientes activos</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-6 col-md-2">
-        <div class="card text-center shadow-sm">
-            <div class="card-body">
-                <div class="h5 fw-bold mb-0">@Model.MesMasActivo</div>
-                <div class="text-muted">Mes más activo</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-6 col-md-2">
-        <div class="card text-center shadow-sm">
-            <div class="card-body">
-                <div class="h5 fw-bold mb-0">@Model.OperadorMasActivo</div>
-                <div class="text-muted">Operador más activo</div>
-            </div>
-        </div>
+    <div class="col-6 col-md-3">
+        <div class="kpi-card kpi--ok"><div class="kpi-value" style="font-size:1.15rem">@Model.OperadorMasActivo</div><div class="kpi-label">Operador más activo</div></div>
     </div>
 </div>
 
-<div class="card shadow-sm mb-4">
+<div class="card mb-4">
     <div class="card-body">
-        <h5 class="card-title">Comparativo anual</h5>
+        <h5 class="card-title mb-3">Comparativo anual</h5>
         @if (!Model.Comparativo.Any())
         {
             <p class="text-muted mb-0">Aún no hay servicios registrados para comparar.</p>
@@ -203,7 +144,7 @@
         else
         {
             <div class="table-responsive">
-                <table class="table table-striped align-middle">
+                <table class="table table-hover align-middle mb-0">
                     <thead>
                         <tr>
                             <th>Año</th>
@@ -217,7 +158,7 @@
                         @foreach (var c in Model.Comparativo)
                         {
                             <tr>
-                                <td>@c.Anio</td>
+                                <td class="fw-bold">@c.Anio</td>
                                 <td class="text-center">@c.Total</td>
                                 <td class="text-center">@c.Entregados</td>
                                 <td class="text-center">@c.Cancelados</td>
@@ -230,3 +171,25 @@
         }
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        window.ggpAnio = @Model.Anio;
+        (function () {
+            var nums = document.querySelectorAll('.kpi-value[data-contador]');
+            nums.forEach(function (el) {
+                var destino = parseInt(el.getAttribute('data-contador'), 10);
+                if (isNaN(destino)) return;
+                var dur = 900, ini = null;
+                el.textContent = '0';
+                function paso(t) {
+                    if (!ini) ini = t;
+                    var p = Math.min((t - ini) / dur, 1);
+                    el.textContent = Math.round(destino * p);
+                    if (p < 1) requestAnimationFrame(paso); else el.textContent = destino;
+                }
+                requestAnimationFrame(paso);
+            });
+        })();
+    </script>
+}

@@ -7,6 +7,7 @@ using TransGGP.Application.Security;
 using TransGGP.Infrastructure.Repositories;
 using TransGGP.Infrastructure.Decorators;
 using TransGGP.Infrastructure.Security;
+using TransGGP.Infrastructure.Services;
 using TransGGP.Application.Services;
 using QuestPDF.Infrastructure;
 
@@ -52,6 +53,11 @@ builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
 builder.Services.AddScoped<UsuarioService>();
 builder.Services.AddScoped<DashboardService>();
+builder.Services.AddScoped<IAsistenteAnalisis>(_ => new AsistenteAnalisisClaude(
+    builder.Configuration["Anthropic:ApiKey"] ?? "",
+    builder.Configuration["Anthropic:Model"] ?? "claude-haiku-4-5-20251001"));
+builder.Services.AddScoped<AsistenteService>();
+builder.Services.AddAntiforgery(options => options.HeaderName = "RequestVerificationToken");
 
 // Autenticación por cookie: guarda la sesión del usuario tras iniciar sesión
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
