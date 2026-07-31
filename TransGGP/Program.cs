@@ -1,7 +1,11 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TransGGP.Infrastructure;
 using TransGGP.Application.Interfaces;
 using TransGGP.Infrastructure.Repositories;
 using TransGGP.Infrastructure.Decorators;
+using TransGGP.Infrastructure.Security;
 using TransGGP.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,10 +43,33 @@ builder.Services.AddScoped<DollyService>();
 builder.Services.AddScoped<IConfiguracionRepository, ConfiguracionRepository>();
 builder.Services.AddScoped<ConfiguracionService>();
 
+// Seguridad: hasheo de contraseñas y gestión de usuarios
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
+builder.Services.AddScoped<UsuarioService>();
+
+// Autenticación por cookie: guarda la sesión del usuario tras iniciar sesión
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Cuenta/Login";
+        options.AccessDeniedPath = "/Cuenta/AccesoDenegado";
+    });
+
+// Por defecto, toda la app exige haber iniciado sesión (salvo [AllowAnonymous])
+builder.Services.AddAuthorization(options =>
+{
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+});
+
 builder.Services.AddControllersWithViews(options =>
 {
     // Los campos string no incluidos en el formulario no se marcan como obligatorios
     options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+    // Protección CSRF: valida el token antiforgery en todos los formularios POST
+    options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
 });
 
 var app = builder.Build();
@@ -61,10 +88,21 @@ else
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+// Sembrado: si no hay ningún usuario, crea un administrador inicial
+using (var scope = app.Services.CreateScope())
+{
+    var usuarioService = scope.ServiceProvider.GetRequiredService<UsuarioService>();
+    if (!usuarioService.ExisteAlgunUsuario())
+    {
+        usuarioService.RegistrarUsuario("Administrador", "admin@transggp.com", "Admin123!", "Admin");
+    }
+}
 
 app.Run();
