@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TransGGP.Application.Services;
 using TransGGP.Domain.Models;
 using TransGGP.Application.Interfaces;
@@ -15,7 +16,7 @@ namespace TransGGP.Web.Controllers
         {
             _clienteService = clienteService; // Inyección de dependencias del servicio
         }
-      
+
         // Index
         public IActionResult Index()
         {
@@ -24,6 +25,7 @@ namespace TransGGP.Web.Controllers
         }
 
         // GET Create: muestra el formulario vacío
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult Create()
         {
@@ -31,6 +33,7 @@ namespace TransGGP.Web.Controllers
         }
 
         // POST Create: recibe los datos del formulario y guarda
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult Create(Cliente cliente)
         {
@@ -57,6 +60,7 @@ namespace TransGGP.Web.Controllers
 
 
         // GET Edit
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult Edit(int id)
         {
@@ -69,6 +73,7 @@ namespace TransGGP.Web.Controllers
         }
 
         // POST Edit: recibe los cambios y guarda
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult Edit(Cliente cliente)
         {
@@ -81,6 +86,7 @@ namespace TransGGP.Web.Controllers
         }
 
         // POST Delete
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult Delete(int id)
         {
