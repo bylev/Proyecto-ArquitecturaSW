@@ -1,12 +1,14 @@
+@using TransGGP.Application.Security
 @model List<TransGGP.Domain.Models.Servicio>
 @{
     int pagina = ViewBag.Pagina ?? 1;
     int totalPaginas = ViewBag.TotalPaginas ?? 1;
+    var puedeEditar = User.TienePermiso(Permisos.ServiciosEditar);
 }
 
 <h1>Servicios de transporte</h1>
 
-@if (User.IsInRole("Admin"))
+@if (puedeEditar)
 {
     <a asp-action="Create" class="btn btn-primary mb-3">+ Registrar servicio</a>
 }
@@ -36,7 +38,7 @@ else
                 <th>Destino</th>
                 <th>Fecha carga</th>
                 <th>Estatus</th>
-                @if (User.IsInRole("Admin"))
+                @if (puedeEditar)
                 {
                     <th>Acciones</th>
                 }
@@ -52,7 +54,7 @@ else
                     <td>@s.Destino</td>
                     <td>@s.FechaCarga.ToString("dd/MM/yyyy")</td>
                     <td>@s.Estatus</td>
-                    @if (User.IsInRole("Admin"))
+                    @if (puedeEditar)
                     {
                         <td>
                             <a asp-action="Edit" asp-route-id="@s.Id" class="btn btn-warning btn-sm">Editar</a>

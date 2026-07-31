@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using TransGGP.Application.Security;
 using TransGGP.Application.Services;
 using TransGGP.Domain.Models;
 
 namespace TransGGP.Web.Controllers
 {
+    [Authorize(Policy = Permisos.ServiciosLeer)]
     public class ServiciosController : Controller
     {
         private readonly ServicioService _servicioService;
@@ -57,7 +59,7 @@ namespace TransGGP.Web.Controllers
             return View(serviciosPagina);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = Permisos.ServiciosEditar)]
         [HttpGet]
         public IActionResult Create()
         {
@@ -65,7 +67,7 @@ namespace TransGGP.Web.Controllers
             return View(new Servicio()); // fechas con valor por defecto (DateTime.Now)
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = Permisos.ServiciosEditar)]
         [HttpPost]
         public IActionResult Create(Servicio servicio)
         {
@@ -86,7 +88,7 @@ namespace TransGGP.Web.Controllers
         }
 
         // GET Edit: muestra el formulario con los datos del servicio
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = Permisos.ServiciosEditar)]
         [HttpGet]
         public IActionResult Edit(int id)
         {
@@ -99,7 +101,7 @@ namespace TransGGP.Web.Controllers
         }
 
         // POST Edit: recibe los cambios y guarda
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = Permisos.ServiciosEditar)]
         [HttpPost]
         public IActionResult Edit(Servicio servicio)
         {

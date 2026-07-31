@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TransGGP.ViewModels
 {
-    public class UsuarioCrearViewModel
+    public class UsuarioCrearViewModel : UsuarioPermisosViewModel
     {
         [Required(ErrorMessage = "El nombre es obligatorio.")]
         [StringLength(100, ErrorMessage = "El nombre no puede tener más de 100 caracteres.")]

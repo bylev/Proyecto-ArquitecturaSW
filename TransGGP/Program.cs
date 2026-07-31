@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TransGGP.Infrastructure;
 using TransGGP.Application.Interfaces;
+using TransGGP.Application.Security;
 using TransGGP.Infrastructure.Repositories;
 using TransGGP.Infrastructure.Decorators;
 using TransGGP.Infrastructure.Security;
@@ -62,6 +63,13 @@ builder.Services.AddAuthorization(options =>
     options.FallbackPolicy = new AuthorizationPolicyBuilder()
         .RequireAuthenticatedUser()
         .Build();
+
+    foreach (var permiso in Permisos.Todos())
+    {
+        var permisoActual = permiso;
+        options.AddPolicy(permisoActual, policy =>
+            policy.RequireAssertion(context => context.User.TienePermiso(permisoActual)));
+    }
 });
 
 builder.Services.AddControllersWithViews(options =>

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TransGGP.Application.Security;
 using TransGGP.Application.Services;
 using TransGGP.Domain.Models;
 using TransGGP.Application.Interfaces;
@@ -7,6 +8,7 @@ using TransGGP.Application.Reports;
 
 namespace TransGGP.Web.Controllers
 {
+    [Authorize(Policy = Permisos.ClientesLeer)]
     public class ClientesController : Controller // Hereda de Controller
     {
         private readonly ClienteService _clienteService;
@@ -25,7 +27,7 @@ namespace TransGGP.Web.Controllers
         }
 
         // GET Create: muestra el formulario vacío
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = Permisos.ClientesEditar)]
         [HttpGet]
         public IActionResult Create()
         {
@@ -33,7 +35,7 @@ namespace TransGGP.Web.Controllers
         }
 
         // POST Create: recibe los datos del formulario y guarda
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = Permisos.ClientesEditar)]
         [HttpPost]
         public IActionResult Create(Cliente cliente)
         {
@@ -60,7 +62,7 @@ namespace TransGGP.Web.Controllers
 
 
         // GET Edit
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = Permisos.ClientesEditar)]
         [HttpGet]
         public IActionResult Edit(int id)
         {
@@ -73,7 +75,7 @@ namespace TransGGP.Web.Controllers
         }
 
         // POST Edit: recibe los cambios y guarda
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = Permisos.ClientesEditar)]
         [HttpPost]
         public IActionResult Edit(Cliente cliente)
         {
@@ -86,7 +88,7 @@ namespace TransGGP.Web.Controllers
         }
 
         // POST Delete
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = Permisos.ClientesEditar)]
         [HttpPost]
         public IActionResult Delete(int id)
         {

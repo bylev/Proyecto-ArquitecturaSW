@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TransGGP.Application.Security;
 using TransGGP.Application.Services;
 using TransGGP.Domain.Models;
 
 namespace TransGGP.Web.Controllers
 {
+    [Authorize(Policy = Permisos.SemirremolquesLeer)]
     public class SemirremolquesController : Controller
     {
         private readonly SemirremolqueService _semirremolqueService;
@@ -19,14 +21,14 @@ namespace TransGGP.Web.Controllers
             return View(_semirremolqueService.ObtenerTodos());
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = Permisos.SemirremolquesEditar)]
         [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = Permisos.SemirremolquesEditar)]
         [HttpPost]
         public IActionResult Create(Semirremolque semirremolque)
         {
@@ -38,7 +40,7 @@ namespace TransGGP.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = Permisos.SemirremolquesEditar)]
         [HttpGet]
         public IActionResult Edit(int id)
         {
@@ -48,7 +50,7 @@ namespace TransGGP.Web.Controllers
             return View(semirremolque);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = Permisos.SemirremolquesEditar)]
         [HttpPost]
         public IActionResult Edit(Semirremolque semirremolque)
         {
@@ -60,7 +62,7 @@ namespace TransGGP.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = Permisos.SemirremolquesEditar)]
         [HttpPost]
         public IActionResult Delete(int id)
         {
