@@ -27,14 +27,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Transportes GGP</title>
     <script type="importmap"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/TransGGP.styles.css" asp-append-version="true" />
 </head>
 <body>
+    <svg class="ggp-lanes" viewBox="0 0 1200 900" preserveAspectRatio="none" aria-hidden="true">
+        <g class="lane-move">
+            <path class="l-navy" d="M-200,700 C 200,540 520,660 780,430 C 960,270 1100,240 1400,150" stroke-width="48" />
+            <path class="l-navy" d="M-200,782 C 220,610 540,720 800,500 C 990,340 1120,300 1400,215" stroke-width="30" />
+            <path class="l-gold" d="M-200,852 C 240,690 560,790 830,570 C 1020,415 1150,370 1400,285" stroke-width="26" />
+            <path class="l-navy route" d="M-200,905 C 260,760 580,855 860,640 C 1050,490 1180,440 1400,360" stroke-width="4" />
+        </g>
+    </svg>
     <header>
         <nav class="navbar navbar-expand-lg ggp-navbar sticky-top">
             <div class="container-fluid px-lg-4">
@@ -132,12 +137,6 @@
                                         </form>
                                     </li>
                                 </ul>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link @(controladorActual == "Cuenta" ? "active" : "")" asp-controller="Cuenta" asp-action="Login">Entrar</a>
                             </li>
                         }
                     </ul>
