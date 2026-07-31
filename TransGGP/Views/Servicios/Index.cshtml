@@ -6,7 +6,10 @@
 
 <h1>Servicios de transporte</h1>
 
-<a asp-action="Create" class="btn btn-primary mb-3">+ Registrar servicio</a>
+@if (User.IsInRole("Admin"))
+{
+    <a asp-action="Create" class="btn btn-primary mb-3">+ Registrar servicio</a>
+}
 
 <form asp-action="Index" method="get" class="row g-2 mb-3">
     <div class="col-auto">
@@ -33,7 +36,10 @@ else
                 <th>Destino</th>
                 <th>Fecha carga</th>
                 <th>Estatus</th>
-                <th>Acciones</th>
+                @if (User.IsInRole("Admin"))
+                {
+                    <th>Acciones</th>
+                }
             </tr>
         </thead>
         <tbody>
@@ -46,9 +52,12 @@ else
                     <td>@s.Destino</td>
                     <td>@s.FechaCarga.ToString("dd/MM/yyyy")</td>
                     <td>@s.Estatus</td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@s.Id" class="btn btn-warning btn-sm">Editar</a>
-                    </td>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@s.Id" class="btn btn-warning btn-sm">Editar</a>
+                        </td>
+                    }
                 </tr>
             }
         </tbody>

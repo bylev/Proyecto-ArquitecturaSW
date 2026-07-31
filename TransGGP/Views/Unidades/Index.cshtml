@@ -2,7 +2,10 @@
 
 <h1>Unidades</h1>
 
-<a asp-action="Create" class="btn btn-primary mb-3">+ Nueva unidad</a>
+@if (User.IsInRole("Admin"))
+{
+    <a asp-action="Create" class="btn btn-primary mb-3">+ Nueva unidad</a>
+}
 
 @if (!Model.Any())
 {
@@ -16,7 +19,10 @@ else
                 <th>Id</th>
                 <th>Clave</th>
                 <th>Placa</th>
-                <th>Acciones</th>
+                @if (User.IsInRole("Admin"))
+                {
+                    <th>Acciones</th>
+                }
             </tr>
         </thead>
         <tbody>
@@ -26,13 +32,16 @@ else
                     <td>@u.Id</td>
                     <td>@u.Clave</td>
                     <td>@u.Placa</td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@u.Id" class="btn btn-primary btn-sm">Editar</a>
-                        <form asp-action="Delete" method="post" onsubmit="return confirm('¿Eliminar esta unidad?');" style="display:inline;">
-                            <input type="hidden" name="id" value="@u.Id" />
-                            <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
-                        </form>
-                    </td>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@u.Id" class="btn btn-primary btn-sm">Editar</a>
+                            <form asp-action="Delete" method="post" onsubmit="return confirm('¿Eliminar esta unidad?');" style="display:inline;">
+                                <input type="hidden" name="id" value="@u.Id" />
+                                <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                            </form>
+                        </td>
+                    }
                 </tr>
             }
         </tbody>
