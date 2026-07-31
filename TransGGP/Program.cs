@@ -17,7 +17,7 @@ builder.Services.AddInfrastructure(connectionString);
 builder.Services.AddScoped<ClienteRepository>();
 
 // PATRÓN DECORATOR: cuando alguien pida IClienteRepository, se le entrega
-// el decorador de logging, que envuelve al ClienteRepository real.N1
+// el decorador de logging, que envuelve al ClienteRepository real.
 builder.Services.AddScoped<IClienteRepository>(provider =>
     new ClienteRepositoryLoggingDecorator(
         provider.GetRequiredService<ClienteRepository>(),
