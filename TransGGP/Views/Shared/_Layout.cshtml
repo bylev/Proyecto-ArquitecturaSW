@@ -1,5 +1,6 @@
 ﻿@{
     var controladorActual = ViewContext.RouteData.Values["Controller"]?.ToString();
+    var accionActual = ViewContext.RouteData.Values["Action"]?.ToString();
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -29,7 +30,7 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark @(controladorActual == "Home" ? "active fw-bold" : "")" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
+                            <a class="nav-link text-dark @(controladorActual == "Home" && accionActual == "Index" ? "active fw-bold" : "")" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark @(controladorActual == "Servicios" ? "active fw-bold" : "")" asp-area="" asp-controller="Servicios" asp-action="Index">Servicios</a>
@@ -53,7 +54,7 @@
                             <a class="nav-link text-dark @(controladorActual == "Configuraciones" ? "active fw-bold" : "")" asp-area="" asp-controller="Configuraciones" asp-action="Index">Configuraciones</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacidad</a>
+                            <a class="nav-link text-dark @(controladorActual == "Home" && accionActual == "Privacy" ? "active fw-bold" : "")" asp-area="" asp-controller="Home" asp-action="Privacy">Privacidad</a>
                         </li>
                     </ul>
                 </div>
