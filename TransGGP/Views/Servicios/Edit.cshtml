@@ -3,6 +3,8 @@
 <h1>Editar Servicio</h1>
 
 <form asp-action="Edit" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
     <input type="hidden" asp-for="Id" />
     <input type="hidden" asp-for="FechaCreacion" />
 
@@ -11,35 +13,42 @@
         <select asp-for="ClienteId" class="form-select" asp-items="ViewBag.Clientes">
             <option value="">-- Selecciona un cliente --</option>
         </select>
+        <span asp-validation-for="ClienteId" class="text-danger"></span>
     </div>
     <div class="mb-3">
         <label class="form-label">Operador</label>
         <select asp-for="OperadorId" class="form-select" asp-items="ViewBag.Operadores">
             <option value="">-- Selecciona un operador --</option>
         </select>
+        <span asp-validation-for="OperadorId" class="text-danger"></span>
     </div>
     <div class="mb-3">
         <label class="form-label">Unidad</label>
         <select asp-for="UnidadId" class="form-select" asp-items="ViewBag.Unidades">
             <option value="">-- Selecciona una unidad --</option>
         </select>
+        <span asp-validation-for="UnidadId" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
         <label asp-for="NumeroEmbarque" class="form-label">Número de embarque</label>
         <input asp-for="NumeroEmbarque" class="form-control" />
+        <span asp-validation-for="NumeroEmbarque" class="text-danger"></span>
     </div>
     <div class="mb-3">
         <label asp-for="Origen" class="form-label">Origen</label>
         <input asp-for="Origen" class="form-control" />
+        <span asp-validation-for="Origen" class="text-danger"></span>
     </div>
     <div class="mb-3">
         <label asp-for="Destino" class="form-label">Destino</label>
         <input asp-for="Destino" class="form-control" />
+        <span asp-validation-for="Destino" class="text-danger"></span>
     </div>
     <div class="mb-3">
         <label asp-for="TipoCarga" class="form-label">Tipo de carga</label>
         <input asp-for="TipoCarga" class="form-control" />
+        <span asp-validation-for="TipoCarga" class="text-danger"></span>
     </div>
     <div class="mb-3">
         <label asp-for="FechaCarga" class="form-label">Fecha de carga</label>
@@ -52,8 +61,13 @@
     <div class="mb-3">
         <label asp-for="Estatus" class="form-label">Estatus</label>
         <input asp-for="Estatus" class="form-control" placeholder="Pendiente, En tránsito, Completado" />
+        <span asp-validation-for="Estatus" class="text-danger"></span>
     </div>
 
     <button type="submit" class="btn btn-primary">Guardar cambios</button>
     <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

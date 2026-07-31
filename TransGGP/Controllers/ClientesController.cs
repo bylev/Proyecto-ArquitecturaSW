@@ -38,6 +38,7 @@ namespace TransGGP.Web.Controllers
                 return View(cliente); // si los datos no son válidos, vuelve a mostrar el formulario
 
             _clienteService.RegistrarCliente(cliente); // guarda el cliente
+            TempData["Exito"] = "Cliente guardado correctamente.";
             return RedirectToAction("Index"); // tras guardar, redirige a la lista
         }
 
@@ -75,6 +76,7 @@ namespace TransGGP.Web.Controllers
                 return View(cliente); // si no es válido, vuelve a mostrar el formulario
 
             _clienteService.ActualizarCliente(cliente);
+            TempData["Exito"] = "Cliente actualizado correctamente.";
             return RedirectToAction("Index");
         }
 
