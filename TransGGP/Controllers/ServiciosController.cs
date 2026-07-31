@@ -24,9 +24,23 @@ namespace TransGGP.Web.Controllers
             _unidadService = unidadService;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string? buscar)
         {
-            return View(_servicioService.ObtenerTodos());
+            var servicios = _servicioService.ObtenerTodos();
+
+            if (!string.IsNullOrWhiteSpace(buscar))
+            {
+                var texto = buscar.Trim().ToLower();
+                servicios = servicios
+                    .Where(s => s.NumeroEmbarque.ToLower().Contains(texto)
+                             || s.Origen.ToLower().Contains(texto)
+                             || s.Destino.ToLower().Contains(texto)
+                             || s.Estatus.ToLower().Contains(texto))
+                    .ToList();
+            }
+
+            ViewBag.Buscar = buscar;
+            return View(servicios);
         }
 
         [HttpGet]
