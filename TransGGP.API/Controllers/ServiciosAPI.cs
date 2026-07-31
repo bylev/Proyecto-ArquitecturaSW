@@ -1,9 +1,12 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TransGGP.Application.Security;
 using TransGGP.Application.Services;
 using TransGGP.Domain.Models;
 
 namespace TransGGP.API.Controllers
 {
+    [Authorize(Policy = Permisos.ServiciosLeer)]
     [ApiController]
     [Route("api")]
     public class ServiciosApiController : ControllerBase
@@ -29,6 +32,7 @@ namespace TransGGP.API.Controllers
             return Ok(servicio);
         }
 
+        [Authorize(Policy = Permisos.ServiciosEditar)]
         [HttpPost("crearservicio")]
         public ActionResult<Servicio> Crear([FromBody] Servicio servicio)
         {

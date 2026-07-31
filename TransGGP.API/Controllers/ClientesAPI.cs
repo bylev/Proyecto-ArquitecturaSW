@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TransGGP.Application.DTOs;
+using TransGGP.Application.Security;
 using TransGGP.Application.Services;
 using TransGGP.Domain.Models;
 
 namespace TransGGP.API.Controllers
 {
+    [Authorize(Policy = Permisos.ClientesLeer)]
     [ApiController]
     [Route("api")]
     public class ClientesApiController : ControllerBase
@@ -25,6 +28,7 @@ namespace TransGGP.API.Controllers
         }
 
       
+        [Authorize(Policy = Permisos.ClientesEditar)]
         [HttpPost("crearcliente")]
         public ActionResult<Cliente> CrearCliente([FromBody] ClienteCreateDto clienteDto)
         {
@@ -41,6 +45,7 @@ namespace TransGGP.API.Controllers
             return CreatedAtAction(nameof(ObtenerTodos), new { id = clienteCreado.Id }, clienteCreado);
         }
 
+        [Authorize(Policy = Permisos.ClientesEditar)]
         [HttpDelete("eliminarcliente/{id}")]
         public IActionResult Eliminar(int id)
         {

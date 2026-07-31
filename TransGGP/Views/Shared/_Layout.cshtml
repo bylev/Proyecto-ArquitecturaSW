@@ -70,7 +70,7 @@
                         @if (User.Identity?.IsAuthenticated == true)
                         {
                             <li class="nav-item d-flex align-items-center me-2">
-                                <span class="nav-link text-dark">@User.Identity.Name</span>
+                                <a class="nav-link text-dark @(controladorActual == "Perfil" ? "active fw-bold" : "")" asp-controller="Perfil" asp-action="CambiarPassword" title="Cambiar contraseña">@User.Identity.Name</a>
                             </li>
                             <li class="nav-item d-flex align-items-center">
                                 <form asp-controller="Cuenta" asp-action="Logout" method="post">

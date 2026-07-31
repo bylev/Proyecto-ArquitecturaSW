@@ -2,6 +2,11 @@
   "ConnectionStrings": {
     "DefaultConnection": "Server=localhost;Database=transggp;User=root;Password=TU_CONTRASEÑA;Port=3306"
   },
+  "Jwt": {
+    "Key": "CAMBIA_ESTA_CLAVE_POR_UN_SECRETO_DE_AL_MENOS_32_CARACTERES",
+    "Issuer": "TransGGP.API",
+    "Audience": "TransGGP.API"
+  },
   "Logging": {
     "LogLevel": {
       "Default": "Information",

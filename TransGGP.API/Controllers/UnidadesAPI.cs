@@ -1,9 +1,12 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TransGGP.Application.Security;
 using TransGGP.Application.Services;
 using TransGGP.Domain.Models;
 
 namespace TransGGP.API.Controllers
 {
+    [Authorize(Policy = Permisos.UnidadesLeer)]
     [ApiController]
     [Route("api")]
     public class UnidadesApiController : ControllerBase
@@ -29,6 +32,7 @@ namespace TransGGP.API.Controllers
             return Ok(unidad);
         }
 
+        [Authorize(Policy = Permisos.UnidadesEditar)]
         [HttpPost("crearunidad")]
         public ActionResult<Unidad> Crear([FromBody] Unidad unidad)
         {
@@ -39,6 +43,7 @@ namespace TransGGP.API.Controllers
             return CreatedAtAction(nameof(ObtenerPorId), new { id = creada.Id }, creada);
         }
 
+        [Authorize(Policy = Permisos.UnidadesEditar)]
         [HttpDelete("eliminarunidad/{id}")]
         public IActionResult Eliminar(int id)
         {
