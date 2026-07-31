@@ -1,8 +1,12 @@
+@using TransGGP.Application.Security
 @model List<TransGGP.Domain.Models.Dolly>
+@{
+    var puedeEditar = User.TienePermiso(Permisos.DollysEditar);
+}
 
 <h1>Dollys</h1>
 
-@if (User.IsInRole("Admin"))
+@if (puedeEditar)
 {
     <a asp-action="Create" class="btn btn-primary mb-3">+ Nuevo dolly</a>
 }
@@ -20,7 +24,7 @@ else
                 <th>Clave</th>
                 <th>Placa</th>
                 <th>Fecha de creación</th>
-                @if (User.IsInRole("Admin"))
+                @if (puedeEditar)
                 {
                     <th>Acciones</th>
                 }
@@ -34,7 +38,7 @@ else
                     <td>@d.Clave</td>
                     <td>@d.Placa</td>
                     <td>@d.FechaCreacion.ToString("dd/MM/yyyy")</td>
-                    @if (User.IsInRole("Admin"))
+                    @if (puedeEditar)
                     {
                         <td>
                             <a asp-action="Edit" asp-route-id="@d.Id" class="btn btn-primary btn-sm">Editar</a>

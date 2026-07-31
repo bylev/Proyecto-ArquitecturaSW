@@ -58,10 +58,72 @@ else
                                     Eliminar
                                 </button>
                             </form>
+
+                            @if (!esUsuarioActual && u.Rol != "Admin")
+                            {
+                                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="collapse" data-bs-target="#permisos-@u.Id">
+                                    Permisos
+                                </button>
+                            }
                         </div>
                         @if (esUsuarioActual)
                         {
                             <small class="text-muted">Tu cuenta actual</small>
+                        }
+
+                        @if (!esUsuarioActual && u.Rol != "Admin")
+                        {
+                            <div class="collapse mt-2" id="permisos-@u.Id">
+                                <form asp-action="ActualizarPermisos" asp-route-id="@u.Id" method="post">
+                                    <table class="table table-bordered mb-2">
+                                        <thead>
+                                            <tr>
+                                                <th>Módulo</th>
+                                                <th class="text-center">Ver</th>
+                                                <th class="text-center">Editar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Servicios</td>
+                                                <td class="text-center"><input type="checkbox" name="PuedeVerServicios" value="true" checked="@u.PuedeVerServicios" class="form-check-input" /></td>
+                                                <td class="text-center"><input type="checkbox" name="PuedeEditarServicios" value="true" checked="@u.PuedeEditarServicios" class="form-check-input" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Clientes</td>
+                                                <td class="text-center"><input type="checkbox" name="PuedeVerClientes" value="true" checked="@u.PuedeVerClientes" class="form-check-input" /></td>
+                                                <td class="text-center"><input type="checkbox" name="PuedeEditarClientes" value="true" checked="@u.PuedeEditarClientes" class="form-check-input" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Operadores</td>
+                                                <td class="text-center"><input type="checkbox" name="PuedeVerOperadores" value="true" checked="@u.PuedeVerOperadores" class="form-check-input" /></td>
+                                                <td class="text-center"><input type="checkbox" name="PuedeEditarOperadores" value="true" checked="@u.PuedeEditarOperadores" class="form-check-input" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Unidades</td>
+                                                <td class="text-center"><input type="checkbox" name="PuedeVerUnidades" value="true" checked="@u.PuedeVerUnidades" class="form-check-input" /></td>
+                                                <td class="text-center"><input type="checkbox" name="PuedeEditarUnidades" value="true" checked="@u.PuedeEditarUnidades" class="form-check-input" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Semirremolques</td>
+                                                <td class="text-center"><input type="checkbox" name="PuedeVerSemirremolques" value="true" checked="@u.PuedeVerSemirremolques" class="form-check-input" /></td>
+                                                <td class="text-center"><input type="checkbox" name="PuedeEditarSemirremolques" value="true" checked="@u.PuedeEditarSemirremolques" class="form-check-input" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Dollys</td>
+                                                <td class="text-center"><input type="checkbox" name="PuedeVerDollys" value="true" checked="@u.PuedeVerDollys" class="form-check-input" /></td>
+                                                <td class="text-center"><input type="checkbox" name="PuedeEditarDollys" value="true" checked="@u.PuedeEditarDollys" class="form-check-input" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Configuraciones</td>
+                                                <td class="text-center"><input type="checkbox" name="PuedeVerConfiguraciones" value="true" checked="@u.PuedeVerConfiguraciones" class="form-check-input" /></td>
+                                                <td class="text-center"><input type="checkbox" name="PuedeEditarConfiguraciones" value="true" checked="@u.PuedeEditarConfiguraciones" class="form-check-input" /></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <button type="submit" class="btn btn-primary btn-sm">Guardar permisos</button>
+                                </form>
+                            </div>
                         }
                     </td>
                 </tr>

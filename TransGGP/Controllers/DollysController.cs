@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TransGGP.Application.Security;
 using TransGGP.Application.Services;
 using TransGGP.Domain.Models;
 
 namespace TransGGP.Web.Controllers
 {
+    [Authorize(Policy = Permisos.DollysLeer)]
     public class DollysController : Controller
     {
         private readonly DollyService _dollyService;
@@ -19,14 +21,14 @@ namespace TransGGP.Web.Controllers
             return View(_dollyService.ObtenerTodos());
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = Permisos.DollysEditar)]
         [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = Permisos.DollysEditar)]
         [HttpPost]
         public IActionResult Create(Dolly dolly)
         {
@@ -38,7 +40,7 @@ namespace TransGGP.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = Permisos.DollysEditar)]
         [HttpGet]
         public IActionResult Edit(int id)
         {
@@ -48,7 +50,7 @@ namespace TransGGP.Web.Controllers
             return View(dolly);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = Permisos.DollysEditar)]
         [HttpPost]
         public IActionResult Edit(Dolly dolly)
         {
@@ -60,7 +62,7 @@ namespace TransGGP.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = Permisos.DollysEditar)]
         [HttpPost]
         public IActionResult Delete(int id)
         {

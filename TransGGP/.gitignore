@@ -140,7 +140,7 @@ Thumbs.db
 *.tmp_proj
 
 # Environment variables
-.env
+.e11nv
 .env.local
 .env.*.local
 

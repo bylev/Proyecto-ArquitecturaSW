@@ -1,8 +1,12 @@
+@using TransGGP.Application.Security
 @model List<TransGGP.Domain.Models.Cliente>
+@{
+    var puedeEditar = User.TienePermiso(Permisos.ClientesEditar);
+}
 
 <h1>Clientes</h1>
 
-@if (User.IsInRole("Admin"))
+@if (puedeEditar)
 {
     <a asp-action="Create" class="btn btn-primary mb-3">+ Nuevo cliente</a>
 }
@@ -21,7 +25,7 @@ else
                 <th>Id</th>
                 <th>Nombre</th>
                 <th>Fecha de creación</th>
-                @if (User.IsInRole("Admin"))
+                @if (puedeEditar)
                 {
                     <th>Acciones</th>
                 }
@@ -34,7 +38,7 @@ else
                     <td>@cliente.Id</td>
                     <td>@cliente.Nombre</td>
                     <td>@cliente.FechaCreacion.ToString("dd/MM/yyyy")</td>
-                    @if (User.IsInRole("Admin"))
+                    @if (puedeEditar)
                     {
                         <td>
                             <div class="d-flex gap-2">

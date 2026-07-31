@@ -1,8 +1,12 @@
+@using TransGGP.Application.Security
 @model List<TransGGP.Domain.Models.Unidad>
+@{
+    var puedeEditar = User.TienePermiso(Permisos.UnidadesEditar);
+}
 
 <h1>Unidades</h1>
 
-@if (User.IsInRole("Admin"))
+@if (puedeEditar)
 {
     <a asp-action="Create" class="btn btn-primary mb-3">+ Nueva unidad</a>
 }
@@ -19,7 +23,7 @@ else
                 <th>Id</th>
                 <th>Clave</th>
                 <th>Placa</th>
-                @if (User.IsInRole("Admin"))
+                @if (puedeEditar)
                 {
                     <th>Acciones</th>
                 }
@@ -32,7 +36,7 @@ else
                     <td>@u.Id</td>
                     <td>@u.Clave</td>
                     <td>@u.Placa</td>
-                    @if (User.IsInRole("Admin"))
+                    @if (puedeEditar)
                     {
                         <td>
                             <a asp-action="Edit" asp-route-id="@u.Id" class="btn btn-primary btn-sm">Editar</a>

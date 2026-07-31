@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TransGGP.Application.Security;
 using TransGGP.Application.Services;
 using TransGGP.Domain.Models;
 
 namespace TransGGP.Web.Controllers
 {
+    [Authorize(Policy = Permisos.UnidadesLeer)]
     public class UnidadesController : Controller
     {
         private readonly UnidadService _unidadService;
@@ -19,14 +21,14 @@ namespace TransGGP.Web.Controllers
             return View(_unidadService.ObtenerTodos());
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = Permisos.UnidadesEditar)]
         [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = Permisos.UnidadesEditar)]
         [HttpPost]
         public IActionResult Create(Unidad unidad)
         {
@@ -38,7 +40,7 @@ namespace TransGGP.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = Permisos.UnidadesEditar)]
         [HttpGet]
         public IActionResult Edit(int id)
         {
@@ -48,7 +50,7 @@ namespace TransGGP.Web.Controllers
             return View(unidad);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = Permisos.UnidadesEditar)]
         [HttpPost]
         public IActionResult Edit(Unidad unidad)
         {
@@ -60,7 +62,7 @@ namespace TransGGP.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = Permisos.UnidadesEditar)]
         [HttpPost]
         public IActionResult Delete(int id)
         {

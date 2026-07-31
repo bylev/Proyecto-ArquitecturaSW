@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TransGGP.Application.Security;
 using TransGGP.Application.Services;
 using TransGGP.Domain.Models;
 
 namespace TransGGP.Web.Controllers
 {
+    [Authorize(Policy = Permisos.ConfiguracionesLeer)]
     public class ConfiguracionesController : Controller
     {
         private readonly ConfiguracionService _configuracionService;
@@ -19,14 +21,14 @@ namespace TransGGP.Web.Controllers
             return View(_configuracionService.ObtenerTodos());
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = Permisos.ConfiguracionesEditar)]
         [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = Permisos.ConfiguracionesEditar)]
         [HttpPost]
         public IActionResult Create(Configuracion configuracion)
         {
@@ -38,7 +40,7 @@ namespace TransGGP.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = Permisos.ConfiguracionesEditar)]
         [HttpGet]
         public IActionResult Edit(int id)
         {
@@ -48,7 +50,7 @@ namespace TransGGP.Web.Controllers
             return View(configuracion);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = Permisos.ConfiguracionesEditar)]
         [HttpPost]
         public IActionResult Edit(Configuracion configuracion)
         {
@@ -60,7 +62,7 @@ namespace TransGGP.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = Permisos.ConfiguracionesEditar)]
         [HttpPost]
         public IActionResult Delete(int id)
         {

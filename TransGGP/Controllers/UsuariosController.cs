@@ -36,7 +36,12 @@ namespace TransGGP.Web.Controllers
 
             try
             {
-                _usuarioService.RegistrarUsuario(modelo.NombreCompleto, modelo.Email, modelo.Password, modelo.Rol);
+                _usuarioService.RegistrarUsuario(
+                    modelo.NombreCompleto,
+                    modelo.Email,
+                    modelo.Password,
+                    modelo.Rol,
+                    modelo.ToPermisosUsuario());
             }
             catch (ValidacionException ex)
             {
@@ -62,6 +67,29 @@ namespace TransGGP.Web.Controllers
             {
                 _usuarioService.CambiarRol(id, rol);
                 TempData["Exito"] = "Rol actualizado correctamente.";
+            }
+            catch (ValidacionException ex)
+            {
+                TempData["Error"] = ex.Message;
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ActualizarPermisos(int id, UsuarioPermisosViewModel modelo)
+        {
+            if (EsUsuarioActual(id))
+            {
+                TempData["Error"] = "No puedes cambiar los permisos de tu propia cuenta desde esta sesión.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            try
+            {
+                _usuarioService.ActualizarPermisos(id, modelo.ToPermisosUsuario());
+                TempData["Exito"] = "Permisos actualizados correctamente.";
             }
             catch (ValidacionException ex)
             {
