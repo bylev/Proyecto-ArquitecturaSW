@@ -1,0 +1,71 @@
+@using System.Security.Claims
+@model List<TransGGP.Domain.Models.Usuario>
+
+@{
+    var idUsuarioActualTexto = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    int.TryParse(idUsuarioActualTexto, out var idUsuarioActual);
+    var emailUsuarioActual = User.FindFirst(ClaimTypes.Email)?.Value;
+}
+
+<h1>Usuarios</h1>
+
+<a asp-action="Create" class="btn btn-primary mb-3">+ Nuevo usuario</a>
+
+@if (!Model.Any())
+{
+    <p class="text-muted">Aún no hay usuarios registrados.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Rol</th>
+                <th>Fecha de creación</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var u in Model)
+            {
+                var esUsuarioActual = idUsuarioActual == u.Id
+                    || string.Equals(emailUsuarioActual, u.Email, StringComparison.OrdinalIgnoreCase);
+
+                <tr>
+                    <td>@u.Id</td>
+                    <td>@u.NombreCompleto</td>
+                    <td>@u.Email</td>
+                    <td>@u.Rol</td>
+                    <td>@u.FechaCreacion.ToString("dd/MM/yyyy")</td>
+                    <td>
+                        <div class="d-flex flex-wrap gap-2 align-items-center">
+                            <form asp-action="CambiarRol" method="post" class="d-flex gap-2 align-items-center">
+                                <input type="hidden" name="id" value="@u.Id" />
+                                <select name="rol" class="form-select form-select-sm" disabled="@esUsuarioActual">
+                                    <option value="Admin" selected="@(u.Rol == "Admin")">Admin</option>
+                                    <option value="User" selected="@(u.Rol == "User")">User</option>
+                                </select>
+                                <button type="submit" class="btn btn-outline-primary btn-sm" disabled="@esUsuarioActual">
+                                    Cambiar rol
+                                </button>
+                            </form>
+
+                            <form asp-action="Delete" asp-route-id="@u.Id" method="post" onsubmit="return confirm('¿Seguro que quieres eliminar este usuario?');">
+                                <button type="submit" class="btn btn-outline-danger btn-sm" disabled="@esUsuarioActual">
+                                    Eliminar
+                                </button>
+                            </form>
+                        </div>
+                        @if (esUsuarioActual)
+                        {
+                            <small class="text-muted">Tu cuenta actual</small>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

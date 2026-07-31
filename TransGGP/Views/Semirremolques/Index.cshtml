@@ -1,0 +1,53 @@
+@model List<TransGGP.Domain.Models.Semirremolque>
+
+<h1>Semirremolques</h1>
+
+@if (User.IsInRole("Admin"))
+{
+    <a asp-action="Create" class="btn btn-primary mb-3">+ Nuevo semirremolque</a>
+}
+
+@if (!Model.Any())
+{
+    <p class="text-muted">Aún no hay semirremolques registrados.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Clave</th>
+                <th>Placa</th>
+                <th>Tipo</th>
+                <th>Fecha de creación</th>
+                @if (User.IsInRole("Admin"))
+                {
+                    <th>Acciones</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var s in Model)
+            {
+                <tr>
+                    <td>@s.Id</td>
+                    <td>@s.Clave</td>
+                    <td>@s.Placa</td>
+                    <td>@s.Tipo</td>
+                    <td>@s.FechaCreacion.ToString("dd/MM/yyyy")</td>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@s.Id" class="btn btn-primary btn-sm">Editar</a>
+                            <form asp-action="Delete" method="post" onsubmit="return confirm('¿Eliminar este semirremolque?');" style="display:inline;">
+                                <input type="hidden" name="id" value="@s.Id" />
+                                <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                            </form>
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}

@@ -1,15 +1,15 @@
-@model List<TransGGP.Domain.Models.Operador>
+@model List<TransGGP.Domain.Models.Configuracion>
 
-<h1>Operadores</h1>
+<h1>Configuraciones</h1>
 
 @if (User.IsInRole("Admin"))
 {
-    <a asp-action="Create" class="btn btn-primary mb-3">+ Nuevo operador</a>
+    <a asp-action="Create" class="btn btn-primary mb-3">+ Nueva configuración</a>
 }
 
 @if (!Model.Any())
 {
-    <p class="text-muted">Aún no hay operadores registrados.</p>
+    <p class="text-muted">Aún no hay configuraciones registradas.</p>
 }
 else
 {
@@ -17,7 +17,6 @@ else
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Número de operador</th>
                 <th>Nombre</th>
                 @if (User.IsInRole("Admin"))
                 {
@@ -26,18 +25,17 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var op in Model)
+            @foreach (var c in Model)
             {
                 <tr>
-                    <td>@op.Id</td>
-                    <td>@op.NumeroOperador</td>
-                    <td>@op.Nombre</td>
+                    <td>@c.Id</td>
+                    <td>@c.Nombre</td>
                     @if (User.IsInRole("Admin"))
                     {
                         <td>
-                            <a asp-action="Edit" asp-route-id="@op.Id" class="btn btn-primary btn-sm">Editar</a>
-                            <form asp-action="Delete" method="post" onsubmit="return confirm('¿Eliminar este operador?');" style="display:inline;">
-                                <input type="hidden" name="id" value="@op.Id" />
+                            <a asp-action="Edit" asp-route-id="@c.Id" class="btn btn-primary btn-sm">Editar</a>
+                            <form asp-action="Delete" method="post" onsubmit="return confirm('¿Eliminar esta configuración?');" style="display:inline;">
+                                <input type="hidden" name="id" value="@c.Id" />
                                 <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
                             </form>
                         </td>
