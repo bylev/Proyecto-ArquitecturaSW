@@ -101,6 +101,23 @@ namespace TransGGP.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public IActionResult ResetearPassword(int id, string password)
+        {
+            try
+            {
+                _usuarioService.ResetearPassword(id, password);
+                TempData["Exito"] = "Contraseña restablecida correctamente.";
+            }
+            catch (ValidacionException ex)
+            {
+                TempData["Error"] = ex.Message;
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
             if (EsUsuarioActual(id))

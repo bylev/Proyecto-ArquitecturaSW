@@ -1,9 +1,12 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TransGGP.Application.Security;
 using TransGGP.Application.Services;
 using TransGGP.Domain.Models;
 
 namespace TransGGP.API.Controllers
 {
+    [Authorize(Policy = Permisos.OperadoresLeer)]
     [ApiController]
     [Route("api")]
     public class OperadoresApiController : ControllerBase
@@ -29,6 +32,7 @@ namespace TransGGP.API.Controllers
             return Ok(operador);
         }
 
+        [Authorize(Policy = Permisos.OperadoresEditar)]
         [HttpPost("crearoperador")]
         public ActionResult<Operador> Crear([FromBody] Operador operador)
         {
@@ -39,6 +43,7 @@ namespace TransGGP.API.Controllers
             return CreatedAtAction(nameof(ObtenerPorId), new { id = creado.Id }, creado);
         }
 
+        [Authorize(Policy = Permisos.OperadoresEditar)]
         [HttpDelete("eliminaroperador/{id}")]
         public IActionResult Eliminar(int id)
         {
