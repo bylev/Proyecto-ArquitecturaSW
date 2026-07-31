@@ -50,20 +50,17 @@ namespace TransGGP.Web.Controllers
         }
 
          [HttpGet]
-        public IActionResult Reporte(string formato = "pdf")
+        public IActionResult Reporte()
         {
             List<Cliente> clientes = _clienteService.ObtenerTodos();
-
-            ReporteCreator creator = formato == "csv"
-                ? new ReporteCsvCreator()
-                : new ReportePdfCreator();
 
             byte[]? logo = null;
             var rutaLogo = Path.Combine(_entorno.WebRootPath, "images", "logo.png");
             if (System.IO.File.Exists(rutaLogo))
                 logo = System.IO.File.ReadAllBytes(rutaLogo);
 
-            ReporteArchivo archivo = creator.GenerarReporte(clientes, logo);
+            ReporteCreator creator = new ReporteClientesPdfCreator(clientes, logo);
+            ReporteArchivo archivo = creator.GenerarReporte();
             return File(archivo.Contenido, archivo.TipoContenido, archivo.NombreArchivo);
         }
 
