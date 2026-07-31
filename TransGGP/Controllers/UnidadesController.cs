@@ -31,6 +31,7 @@ namespace TransGGP.Web.Controllers
                 return View(unidad);
 
             _unidadService.RegistrarUnidad(unidad);
+            TempData["Exito"] = "Unidad guardada correctamente.";
             return RedirectToAction("Index");
         }
 
@@ -50,6 +51,7 @@ namespace TransGGP.Web.Controllers
                 return View(unidad);
 
             _unidadService.ActualizarUnidad(unidad);
+            TempData["Exito"] = "Unidad actualizada correctamente.";
             return RedirectToAction("Index");
         }
 

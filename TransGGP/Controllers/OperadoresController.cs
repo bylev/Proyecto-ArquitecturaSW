@@ -31,6 +31,7 @@ namespace TransGGP.Web.Controllers
                 return View(operador);
 
             _operadorService.RegistrarOperador(operador);
+            TempData["Exito"] = "Operador guardado correctamente.";
             return RedirectToAction("Index");
         }
 
@@ -50,6 +51,7 @@ namespace TransGGP.Web.Controllers
                 return View(operador);
 
             _operadorService.ActualizarOperador(operador);
+            TempData["Exito"] = "Operador actualizado correctamente.";
             return RedirectToAction("Index");
         }
 

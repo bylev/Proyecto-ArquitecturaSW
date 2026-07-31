@@ -51,6 +51,7 @@ namespace TransGGP.Web.Controllers
             servicio.FechaCreacion = DateTime.Now;
 
             _servicioService.RegistrarServicio(servicio);
+            TempData["Exito"] = "Servicio guardado correctamente.";
             return RedirectToAction("Index");
         }
 
@@ -81,6 +82,7 @@ namespace TransGGP.Web.Controllers
             if (servicio.FechaEntrega < new DateTime(2000, 1, 1)) servicio.FechaEntrega = DateTime.Now;
 
             _servicioService.ActualizarServicio(servicio);
+            TempData["Exito"] = "Servicio actualizado correctamente.";
             return RedirectToAction("Index");
         }
 
