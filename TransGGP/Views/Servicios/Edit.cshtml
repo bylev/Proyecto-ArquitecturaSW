@@ -60,7 +60,13 @@
     </div>
     <div class="mb-3">
         <label asp-for="Estatus" class="form-label">Estatus</label>
-        <input asp-for="Estatus" class="form-control" placeholder="Pendiente, En tránsito, Completado" />
+        <select asp-for="Estatus" class="form-select">
+            <option value="">-- Selecciona un estatus --</option>
+            <option value="Agendado">Agendado</option>
+            <option value="En proceso">En proceso</option>
+            <option value="Entregado">Entregado</option>
+            <option value="Cancelado">Cancelado</option>
+        </select>
         <span asp-validation-for="Estatus" class="text-danger"></span>
     </div>
 

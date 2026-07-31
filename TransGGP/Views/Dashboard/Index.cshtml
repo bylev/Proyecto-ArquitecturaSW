@@ -1,0 +1,232 @@
+@model TransGGP.Application.Dashboards.DashboardResumen
+
+@{
+    int AnchoBarra(int parte)
+    {
+        if (Model.Total == 0) return 0;
+        return (int)Math.Round((double)parte * 100 / Model.Total);
+    }
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="mb-0">Panel de análisis</h1>
+        <p class="text-muted mb-0">Servicios de Transportes GGP</p>
+    </div>
+    <form asp-action="Index" method="get" class="d-flex align-items-center gap-2">
+        <label class="form-label mb-0">Año</label>
+        <select name="anio" class="form-select" onchange="this.form.submit()">
+            @foreach (var a in Model.AniosDisponibles)
+            {
+                <option value="@a" selected="@(a == Model.Anio)">@a</option>
+            }
+        </select>
+    </form>
+</div>
+
+<h4 class="mb-3">Indicadores del año @Model.Anio</h4>
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <div class="display-6 fw-bold">@Model.Total</div>
+                <div class="text-muted">Total servicios</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md">
+        <div class="card text-center shadow-sm border-success">
+            <div class="card-body">
+                <div class="display-6 fw-bold text-success">@Model.Entregados</div>
+                <div class="text-muted">Entregados</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md">
+        <div class="card text-center shadow-sm border-primary">
+            <div class="card-body">
+                <div class="display-6 fw-bold text-primary">@Model.EnProceso</div>
+                <div class="text-muted">En proceso</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md">
+        <div class="card text-center shadow-sm border-warning">
+            <div class="card-body">
+                <div class="display-6 fw-bold text-warning">@Model.Agendados</div>
+                <div class="text-muted">Agendados</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md">
+        <div class="card text-center shadow-sm border-danger">
+            <div class="card-body">
+                <div class="display-6 fw-bold text-danger">@Model.Cancelados</div>
+                <div class="text-muted">Cancelados</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-lg-5">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <h5 class="card-title">Distribución por estatus</h5>
+                <p class="text-muted">@Model.PorcentajeEntregados% de los servicios del año fueron entregados.</p>
+
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between"><span>Entregado</span><span>@Model.Entregados</span></div>
+                    <div class="progress" style="height: 18px;">
+                        <div class="progress-bar bg-success" style="width: @AnchoBarra(Model.Entregados)%;"></div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between"><span>En proceso</span><span>@Model.EnProceso</span></div>
+                    <div class="progress" style="height: 18px;">
+                        <div class="progress-bar bg-primary" style="width: @AnchoBarra(Model.EnProceso)%;"></div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between"><span>Agendado</span><span>@Model.Agendados</span></div>
+                    <div class="progress" style="height: 18px;">
+                        <div class="progress-bar bg-warning" style="width: @AnchoBarra(Model.Agendados)%;"></div>
+                    </div>
+                </div>
+                <div class="mb-1">
+                    <div class="d-flex justify-content-between"><span>Cancelado</span><span>@Model.Cancelados</span></div>
+                    <div class="progress" style="height: 18px;">
+                        <div class="progress-bar bg-danger" style="width: @AnchoBarra(Model.Cancelados)%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-7">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <h5 class="card-title">Resumen mensual @Model.Anio</h5>
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped align-middle">
+                        <thead>
+                            <tr>
+                                <th>Mes</th>
+                                <th class="text-center">Total</th>
+                                <th class="text-center">Entregados</th>
+                                <th class="text-center">En proceso</th>
+                                <th class="text-center">Agendados</th>
+                                <th class="text-center">Cancelados</th>
+                                <th class="text-center">% Entregados</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var m in Model.Meses)
+                            {
+                                <tr>
+                                    <td>@m.Mes</td>
+                                    <td class="text-center">@m.Total</td>
+                                    <td class="text-center">@m.Entregados</td>
+                                    <td class="text-center">@m.EnProceso</td>
+                                    <td class="text-center">@m.Agendados</td>
+                                    <td class="text-center">@m.Cancelados</td>
+                                    <td class="text-center">@m.PorcentajeEntregados%</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h4 class="mb-3">Resumen histórico</h4>
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-2">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <div class="h3 fw-bold mb-0">@Model.TotalHistorico</div>
+                <div class="text-muted">Total histórico</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-2">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <div class="h3 fw-bold text-success mb-0">@Model.TotalEntregadosHistorico</div>
+                <div class="text-muted">Entregados</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-2">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <div class="h3 fw-bold text-danger mb-0">@Model.TotalCanceladosHistorico</div>
+                <div class="text-muted">Cancelados</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-2">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <div class="h3 fw-bold mb-0">@Model.ClientesActivos</div>
+                <div class="text-muted">Clientes activos</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-2">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <div class="h5 fw-bold mb-0">@Model.MesMasActivo</div>
+                <div class="text-muted">Mes más activo</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-2">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <div class="h5 fw-bold mb-0">@Model.OperadorMasActivo</div>
+                <div class="text-muted">Operador más activo</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h5 class="card-title">Comparativo anual</h5>
+        @if (!Model.Comparativo.Any())
+        {
+            <p class="text-muted mb-0">Aún no hay servicios registrados para comparar.</p>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-striped align-middle">
+                    <thead>
+                        <tr>
+                            <th>Año</th>
+                            <th class="text-center">Total</th>
+                            <th class="text-center">Entregados</th>
+                            <th class="text-center">Cancelados</th>
+                            <th class="text-center">% Entregados</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var c in Model.Comparativo)
+                        {
+                            <tr>
+                                <td>@c.Anio</td>
+                                <td class="text-center">@c.Total</td>
+                                <td class="text-center">@c.Entregados</td>
+                                <td class="text-center">@c.Cancelados</td>
+                                <td class="text-center">@c.PorcentajeEntregados%</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
