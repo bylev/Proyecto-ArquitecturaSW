@@ -40,7 +40,7 @@ else
                     <td>@s.NumeroEmbarque</td>
                     <td>@s.Origen</td>
                     <td>@s.Destino</td>
-                    <td>@s.FechaCarga.ToShortDateString()</td>
+                    <td>@s.FechaCarga.ToString("dd/MM/yyyy")</td>
                     <td>@s.Estatus</td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@s.Id" class="btn btn-warning btn-sm">Editar</a>
