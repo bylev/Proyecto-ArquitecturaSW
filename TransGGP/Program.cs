@@ -32,6 +32,12 @@ builder.Services.AddScoped<IUnidadRepository, UnidadRepository>();
 builder.Services.AddScoped<UnidadService>();
 builder.Services.AddScoped<IServicioRepository, ServicioRepository>();
 builder.Services.AddScoped<ServicioService>();
+builder.Services.AddScoped<ISemirremolqueRepository, SemirremolqueRepository>();
+builder.Services.AddScoped<SemirremolqueService>();
+builder.Services.AddScoped<IDollyRepository, DollyRepository>();
+builder.Services.AddScoped<DollyService>();
+builder.Services.AddScoped<IConfiguracionRepository, ConfiguracionRepository>();
+builder.Services.AddScoped<ConfiguracionService>();
 
 builder.Services.AddControllersWithViews(options =>
 {

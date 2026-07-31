@@ -1,4 +1,8 @@
 @model List<TransGGP.Domain.Models.Servicio>
+@{
+    int pagina = ViewBag.Pagina ?? 1;
+    int totalPaginas = ViewBag.TotalPaginas ?? 1;
+}
 
 <h1>Servicios de transporte</h1>
 
@@ -49,4 +53,24 @@ else
             }
         </tbody>
     </table>
+
+    @if (totalPaginas > 1)
+    {
+        <nav>
+            <ul class="pagination">
+                <li class="page-item @(pagina <= 1 ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-buscar="@ViewBag.Buscar" asp-route-pagina="@(pagina - 1)">« Anterior</a>
+                </li>
+                @for (int i = 1; i <= totalPaginas; i++)
+                {
+                    <li class="page-item @(i == pagina ? "active" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-buscar="@ViewBag.Buscar" asp-route-pagina="@i">@i</a>
+                    </li>
+                }
+                <li class="page-item @(pagina >= totalPaginas ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-buscar="@ViewBag.Buscar" asp-route-pagina="@(pagina + 1)">Siguiente »</a>
+                </li>
+            </ul>
+        </nav>
+    }
 }

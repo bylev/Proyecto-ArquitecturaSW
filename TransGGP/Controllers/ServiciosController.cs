@@ -24,7 +24,7 @@ namespace TransGGP.Web.Controllers
             _unidadService = unidadService;
         }
 
-        public IActionResult Index(string? buscar)
+        public IActionResult Index(string? buscar, int pagina = 1)
         {
             var servicios = _servicioService.ObtenerTodos();
 
@@ -39,8 +39,21 @@ namespace TransGGP.Web.Controllers
                     .ToList();
             }
 
+            int porPagina = 10;
+            int totalPaginas = (int)Math.Ceiling(servicios.Count / (double)porPagina);
+            if (pagina < 1) pagina = 1;
+            if (totalPaginas > 0 && pagina > totalPaginas) pagina = totalPaginas;
+
+            var serviciosPagina = servicios
+                .Skip((pagina - 1) * porPagina)
+                .Take(porPagina)
+                .ToList();
+
             ViewBag.Buscar = buscar;
-            return View(servicios);
+            ViewBag.Pagina = pagina;
+            ViewBag.TotalPaginas = totalPaginas;
+
+            return View(serviciosPagina);
         }
 
         [HttpGet]
