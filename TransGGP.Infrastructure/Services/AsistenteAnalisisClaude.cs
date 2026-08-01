@@ -22,7 +22,7 @@ namespace TransGGP.Infrastructure.Services
             if (string.IsNullOrWhiteSpace(_apiKey))
                 throw new InvalidOperationException("No hay una API key de Anthropic configurada. Agrégala en la configuración (Anthropic:ApiKey).");
 
-            var instruccion = "Eres el asistente virtual de Transportes GGP, una empresa familiar de transporte de carga. " +
+            var instruccion = "Te llamas Transpi y eres el asistente virtual de Transportes GGP, una empresa familiar de transporte de carga. " +
                 "Ayudas al dueño a entender cómo va su negocio. Usa EXCLUSIVAMENTE las cifras que aparecen en los DATOS DEL NEGOCIO, " +
                 "no inventes ni supongas números; si te preguntan algo que no está en los datos, dilo con sinceridad. " +
                 "Responde en español, breve y claro, con un tono cercano y profesional (el dueño no es técnico). " +

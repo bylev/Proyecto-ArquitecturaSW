@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using TransGGP.Infrastructure;
 using TransGGP.Application.Interfaces;
@@ -90,7 +92,41 @@ builder.Services.AddControllersWithViews(options =>
     options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
 });
 
+// La app corre detrás del balanceador de AWS y de Cloudflare. Ellos terminan el HTTPS
+// y nos avisan del esquema original con la cabecera X-Forwarded-Proto. Sin esto la app
+// cree que todo llega por HTTP y entra en un bucle infinito de redirecciones.
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    // Las IP del balanceador cambian solas, por eso no se listan.
+    options.KnownIPNetworks.Clear();
+    options.KnownProxies.Clear();
+});
+
+// Las llaves que cifran la cookie de sesión se guardan en disco. Si no se conserva
+// la carpeta entre despliegues, a todos se les cierra la sesión al actualizar la app.
+var rutaLlaves = builder.Configuration["DataProtection:KeysPath"];
+if (!string.IsNullOrWhiteSpace(rutaLlaves))
+{
+    // Si la carpeta no se puede usar (permisos del servidor), la app NO debe caerse:
+    // se sigue sin persistir las llaves, que solo implica volver a iniciar sesión.
+    try
+    {
+        Directory.CreateDirectory(rutaLlaves);
+        builder.Services.AddDataProtection()
+            .PersistKeysToFileSystem(new DirectoryInfo(rutaLlaves))
+            .SetApplicationName("TransGGP");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"[Aviso] No se pudieron guardar las llaves en '{rutaLlaves}': {ex.Message}");
+    }
+}
+
 var app = builder.Build();
+
+// Debe ir de primero, antes de cualquier middleware que mire el esquema o la IP.
+app.UseForwardedHeaders();
 
 // Pipeline
 if (app.Environment.IsDevelopment())
@@ -113,13 +149,31 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-// Sembrado: si no hay ningún usuario, crea un administrador inicial
+// Sembrado: si no hay ningún usuario, crea un administrador inicial.
+// En producción el correo y la contraseña se toman de la configuración
+// (variables de entorno), nunca del código.
 using (var scope = app.Services.CreateScope())
 {
     var usuarioService = scope.ServiceProvider.GetRequiredService<UsuarioService>();
     if (!usuarioService.ExisteAlgunUsuario())
     {
-        usuarioService.RegistrarUsuario("Administrador", "admin@transggp.com", "Admin123!", "Admin");
+        var correoAdmin = app.Configuration["AdminInicial:Email"] ?? "admin@transggp.com";
+        var passwordAdmin = app.Configuration["AdminInicial:Password"];
+
+        if (string.IsNullOrWhiteSpace(passwordAdmin))
+        {
+            if (app.Environment.IsDevelopment())
+            {
+                passwordAdmin = "Admin123!";
+            }
+            else
+            {
+                throw new InvalidOperationException(
+                    "No hay usuarios y falta configurar AdminInicial:Password para crear el administrador.");
+            }
+        }
+
+        usuarioService.RegistrarUsuario("Administrador", correoAdmin, passwordAdmin, "Admin");
     }
 }
 
