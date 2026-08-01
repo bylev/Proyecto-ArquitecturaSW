@@ -531,8 +531,8 @@ main{padding-top:1.2rem;}
 .ggp-chat-abierto .ggp-chat-panel{opacity:1;transform:none;pointer-events:auto;}
 .ggp-chat-header{background:linear-gradient(140deg,var(--navy-soft),var(--navy-deep));color:#fff;padding:1.05rem 1.15rem;}
 .ggp-chat-title{display:flex;align-items:center;gap:.65rem;}
-.ggp-chat-title strong{display:block;font-size:1.05rem;font-weight:900;}
-.ggp-chat-title small{color:rgba(255,255,255,.78);font-size:.82rem;}
+.ggp-chat-title strong{display:block;font-size:1.35rem;font-weight:900;letter-spacing:-.4px;line-height:1.2;}
+.ggp-chat-title small{color:rgba(255,255,255,.82);font-size:1rem;}
 .ggp-chat-dot{width:9px;height:9px;border-radius:50%;background:#5FE0A6;box-shadow:0 0 0 3px rgba(95,224,166,.25);}
 .ggp-chat-body{flex:1;overflow-y:auto;padding:1.1rem;background:var(--bg);display:flex;flex-direction:column;gap:.7rem;}
 
