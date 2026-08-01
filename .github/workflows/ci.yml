@@ -1,16 +1,21 @@
-name: CI
+name: CI/CD
 
 on:
+  workflow_dispatch:
   push:
   pull_request:
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
+env:
+  AWS_REGION: us-east-2
+  EB_APPLICATION: transportesggp
+  EB_ENVIRONMENT: transportesggp-env
+  S3_BUCKET: elasticbeanstalk-us-east-2-907956875097
 
-    defaults:
-      run:
-        working-directory: ./TransGGP
+jobs:
+  # ETAPA 1 — Compila el proyecto y corre las pruebas unitarias
+  pruebas:
+    name: Pruebas unitarias
+    runs-on: ubuntu-latest
 
     steps:
       - name: Descargar repositorio
@@ -22,10 +27,72 @@ jobs:
           dotnet-version: "10.0.x"
 
       - name: Restaurar dependencias
-        run: dotnet restore TransGGP.slnx
+        run: dotnet restore TransGGP/TransGGP.slnx
 
       - name: Compilar
-        run: dotnet build TransGGP.slnx --configuration Release --no-restore
+        run: dotnet build TransGGP/TransGGP.slnx --configuration Release --no-restore
 
       - name: Correr pruebas
-        run: dotnet test TransGGP.slnx --configuration Release --no-build
+        run: dotnet test TransGGP/TransGGP.slnx --configuration Release --no-build
+
+  # ETAPA 2 — Solo se ejecuta si la etapa anterior pasó
+  desplegar:
+    name: Deploy a AWS
+    runs-on: ubuntu-latest
+    needs: pruebas
+    if: github.event_name != 'pull_request'
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Publicar la aplicacion (autocontenida para Linux)
+        run: |
+          dotnet publish TransGGP/TransGGP.Web.csproj \
+            --configuration Release \
+            --runtime linux-x64 \
+            --self-contained true \
+            --output publicacion
+
+      - name: Preparar el paquete para Elastic Beanstalk
+        run: |
+          printf 'web: bash start.sh\n' > publicacion/Procfile
+          printf '#!/bin/bash\nchmod +x ./TransGGP.Web\nexec ./TransGGP.Web\n' > publicacion/start.sh
+          chmod +x publicacion/start.sh publicacion/TransGGP.Web
+          cd publicacion && zip -qr ../despliegue.zip . && cd ..
+          ls -lh despliegue.zip
+
+      - name: Conectar con AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Subir el paquete a S3
+        run: |
+          aws s3 cp despliegue.zip \
+            "s3://${S3_BUCKET}/despliegues/transggp-${GITHUB_SHA}.zip"
+
+      - name: Registrar la nueva version
+        run: |
+          aws elasticbeanstalk create-application-version \
+            --application-name "${EB_APPLICATION}" \
+            --version-label "gh-${GITHUB_SHA::7}" \
+            --source-bundle S3Bucket="${S3_BUCKET}",S3Key="despliegues/transggp-${GITHUB_SHA}.zip" \
+            --description "Desplegado desde GitHub Actions"
+
+      - name: Actualizar el entorno
+        run: |
+          aws elasticbeanstalk update-environment \
+            --environment-name "${EB_ENVIRONMENT}" \
+            --version-label "gh-${GITHUB_SHA::7}"
+
+      - name: Resumen
+        run: |
+          echo "Desplegado en https://www.transportesggp.com" >> $GITHUB_STEP_SUMMARY
