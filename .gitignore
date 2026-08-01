@@ -6,6 +6,12 @@ obj/
 *.userosscache
 *.sln.docstates
 
+# Herramientas locales de Claude / Remotion (NO SUBIR A GIT)
+.claude/
+.agents/
+skills-lock.json
+demo-remotion/
+
 # Archivos de configuración con credenciales (NO SUBIR A GIT)
 appsettings.json
 appsettings.*.json
