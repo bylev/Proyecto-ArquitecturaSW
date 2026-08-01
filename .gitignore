@@ -12,6 +12,9 @@ obj/
 skills-lock.json
 demo-remotion/
 
+# Estado local de los scripts de infraestructura
+scripts/.ultimo-endpoint
+
 # Archivos de configuración con credenciales (NO SUBIR A GIT)
 appsettings.json
 appsettings.*.json
