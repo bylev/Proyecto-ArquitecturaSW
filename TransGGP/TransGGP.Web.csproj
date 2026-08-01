@@ -4,7 +4,8 @@
 		<TargetFramework>net10.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
-	</PropertyGroup>
+	  <UserSecretsId>662cef4e-3680-4b81-a7e9-bd5cef09ea81</UserSecretsId>
+  </PropertyGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\TransGGP.Application\TransGGP.Application.csproj" />

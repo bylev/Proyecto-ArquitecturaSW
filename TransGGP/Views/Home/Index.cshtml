@@ -1,9 +1,97 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@using TransGGP.Application.Security
+@{
+    ViewData["Title"] = "Inicio";
+    var autenticado = User.Identity?.IsAuthenticated == true;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section class="ggp-hero">
+    <div>
+        <span class="ggp-chip"><i></i> Sistema de gestión de transporte</span>
+        <h1 class="ggp-hero-title">
+            <span class="l1">Cada viaje,</span>
+            <span class="l2"><span class="em">bajo control.</span></span>
+        </h1>
+        <p class="ggp-hero-sub">
+            Registra y administra los servicios de transporte de carga, sus clientes,
+            operadores y unidades — con un historial confiable para analizar el crecimiento del negocio.
+        </p>
+        <div class="ggp-hero-cta">
+            @if (autenticado)
+            {
+                <a asp-controller="Dashboard" asp-action="Index" class="btn btn-primary btn-lg">Ver panel</a>
+                <a asp-controller="Servicios" asp-action="Index" class="btn btn-secondary btn-lg">Servicios</a>
+            }
+            else
+            {
+                <a asp-controller="Cuenta" asp-action="Login" class="btn btn-primary btn-lg">Iniciar sesión</a>
+            }
+        </div>
+    </div>
 
+    <div class="ggp-logo-stage">
+        <div class="ggp-logo-plate">
+            <svg class="ggp-plate-lanes" viewBox="0 0 400 260" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M-40,220 C 90,150 200,190 300,90 C 340,52 380,40 440,20" fill="none" stroke="#1C3D73" stroke-width="26" />
+                <path d="M-40,258 C 100,190 220,230 320,130 C 360,92 400,80 460,58" fill="none" stroke="#F5B921" stroke-width="18" />
+            </svg>
+            <img src="~/images/logo.png" alt="Transportes GGP" />
+        </div>
+    </div>
+</section>
+
+@if (autenticado)
+{
+    <section class="pb-5 rv">
+        <div class="ggp-eyebrow mb-3">Accesos rápidos</div>
+        <div class="row g-4">
+            @if (User.TienePermiso(Permisos.ServiciosLeer))
+            {
+                <div class="col-6 col-lg-3">
+                    <a asp-controller="Servicios" asp-action="Index" class="modulo-card">
+                        <div class="mi">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><path d="M16 8h4l3 3v5h-7V8z"></path><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                        </div>
+                        <h3>Servicios</h3>
+                        <p>Registro de cada viaje con su cliente, operador y unidad.</p>
+                    </a>
+                </div>
+            }
+            @if (User.TienePermiso(Permisos.ClientesLeer))
+            {
+                <div class="col-6 col-lg-3">
+                    <a asp-controller="Clientes" asp-action="Index" class="modulo-card">
+                        <div class="mi">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path></svg>
+                        </div>
+                        <h3>Clientes</h3>
+                        <p>Catálogo de clientes del negocio.</p>
+                    </a>
+                </div>
+            }
+            @if (User.TienePermiso(Permisos.OperadoresLeer))
+            {
+                <div class="col-6 col-lg-3">
+                    <a asp-controller="Operadores" asp-action="Index" class="modulo-card">
+                        <div class="mi">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        </div>
+                        <h3>Operadores</h3>
+                        <p>Choferes asignados a los servicios.</p>
+                    </a>
+                </div>
+            }
+            @if (User.TienePermiso(Permisos.UnidadesLeer))
+            {
+                <div class="col-6 col-lg-3">
+                    <a asp-controller="Unidades" asp-action="Index" class="modulo-card">
+                        <div class="mi">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="13" height="10" rx="1"></rect><path d="M14 9h4l4 4v3h-8V9z"></path><circle cx="6" cy="19" r="2"></circle><circle cx="18" cy="19" r="2"></circle></svg>
+                        </div>
+                        <h3>Unidades</h3>
+                        <p>Tractocamiones y equipo de transporte.</p>
+                    </a>
+                </div>
+            }
+        </div>
+    </section>
+}

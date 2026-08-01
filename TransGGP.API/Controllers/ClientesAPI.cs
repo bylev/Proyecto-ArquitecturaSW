@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TransGGP.Application.DTOs;
+using TransGGP.Application.Security;
 using TransGGP.Application.Services;
 using TransGGP.Domain.Models;
 
 namespace TransGGP.API.Controllers
 {
+    [Authorize(Policy = Permisos.ClientesLeer)]
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api")]
     public class ClientesApiController : ControllerBase
     {
         private readonly ClienteService _clienteService;
@@ -17,7 +20,7 @@ namespace TransGGP.API.Controllers
         }
 
         
-        [HttpGet]
+        [HttpGet("obtenerclientes")]
         public ActionResult<List<Cliente>> ObtenerTodos()
         {
             var clientes = _clienteService.ObtenerTodos();
@@ -25,8 +28,8 @@ namespace TransGGP.API.Controllers
         }
 
       
-        [HttpPost]
- 
+        [Authorize(Policy = Permisos.ClientesEditar)]
+        [HttpPost("crearcliente")]
         public ActionResult<Cliente> CrearCliente([FromBody] ClienteCreateDto clienteDto)
         {
             if (string.IsNullOrWhiteSpace(clienteDto.Nombre))
@@ -40,6 +43,14 @@ namespace TransGGP.API.Controllers
 
             var clienteCreado = _clienteService.RegistrarCliente(cliente);
             return CreatedAtAction(nameof(ObtenerTodos), new { id = clienteCreado.Id }, clienteCreado);
+        }
+
+        [Authorize(Policy = Permisos.ClientesEditar)]
+        [HttpDelete("eliminarcliente/{id}")]
+        public IActionResult Eliminar(int id)
+        {
+            _clienteService.EliminarCliente(id);
+            return NoContent();
         }
     }
 }

@@ -1,31 +1,101 @@
+@using TransGGP.Application.Security
 @model List<TransGGP.Domain.Models.Servicio>
+@{
+    int pagina = ViewBag.Pagina ?? 1;
+    int totalPaginas = ViewBag.TotalPaginas ?? 1;
+    var puedeEditar = User.TienePermiso(Permisos.ServiciosEditar);
+}
 
 <h1>Servicios de transporte</h1>
 
-<a asp-action="Create" class="btn btn-primary mb-3">+ Registrar servicio</a>
+@if (puedeEditar)
+{
+    <a asp-action="Create" class="btn btn-primary mb-3">+ Registrar servicio</a>
+}
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>N° Embarque</th>
-            <th>Origen</th>
-            <th>Destino</th>
-            <th>Fecha carga</th>
-            <th>Estatus</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var s in Model)
-        {
+<form asp-action="Index" method="get" class="row g-2 mb-3">
+    <div class="col-auto">
+        <input type="text" name="buscar" value="@ViewBag.Buscar" class="form-control" placeholder="Buscar por embarque, origen, destino o estatus" style="min-width: 320px;" />
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary">Buscar</button>
+        <a asp-action="Index" class="btn btn-secondary">Limpiar</a>
+    </div>
+</form>
+
+@if (!Model.Any())
+{
+    <p class="text-muted">No se encontraron servicios.</p>
+}
+else
+{
+    <div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
             <tr>
-                <td>@s.Id</td>
-                <td>@s.NumeroEmbarque</td>
-                <td>@s.Origen</td>
-                <td>@s.Destino</td>
-                <td>@s.FechaCarga.ToShortDateString()</td>
-                <td>@s.Estatus</td>
+                <th>Id</th>
+                <th>N° Embarque</th>
+                <th>Origen</th>
+                <th>Destino</th>
+                <th>Fecha carga</th>
+                <th>Estatus</th>
+                @if (puedeEditar)
+                {
+                    <th>Acciones</th>
+                }
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var s in Model)
+            {
+                <tr>
+                    <td>@s.Id</td>
+                    <td>@s.NumeroEmbarque</td>
+                    <td>@s.Origen</td>
+                    <td>@s.Destino</td>
+                    <td>@s.FechaCarga.ToString("dd/MM/yyyy")</td>
+                    <td>
+                        @{
+                            var clasePill = s.Estatus switch
+                            {
+                                "Entregado" => "ok",
+                                "En proceso" => "pr",
+                                "Agendado" => "ag",
+                                "Cancelado" => "no",
+                                _ => "ag"
+                            };
+                        }
+                        <span class="ggp-pill @clasePill">@s.Estatus</span>
+                    </td>
+                    @if (puedeEditar)
+                    {
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@s.Id" class="btn btn-warning btn-sm">Editar</a>
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+    </div>
+
+    @if (totalPaginas > 1)
+    {
+        <nav>
+            <ul class="pagination">
+                <li class="page-item @(pagina <= 1 ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-buscar="@ViewBag.Buscar" asp-route-pagina="@(pagina - 1)">« Anterior</a>
+                </li>
+                @for (int i = 1; i <= totalPaginas; i++)
+                {
+                    <li class="page-item @(i == pagina ? "active" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-buscar="@ViewBag.Buscar" asp-route-pagina="@i">@i</a>
+                    </li>
+                }
+                <li class="page-item @(pagina >= totalPaginas ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-buscar="@ViewBag.Buscar" asp-route-pagina="@(pagina + 1)">Siguiente »</a>
+                </li>
+            </ul>
+        </nav>
+    }
+}
