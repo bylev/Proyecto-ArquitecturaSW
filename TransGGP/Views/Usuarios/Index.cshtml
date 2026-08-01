@@ -1,0 +1,175 @@
+@using System.Security.Claims
+@model List<TransGGP.Domain.Models.Usuario>
+
+@{
+    ViewData["Title"] = "Usuarios";
+    var idUsuarioActualTexto = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    int.TryParse(idUsuarioActualTexto, out var idUsuarioActual);
+    var emailUsuarioActual = User.FindFirst(ClaimTypes.Email)?.Value;
+
+    var modulos = new (string Etiqueta, string Ver, string Editar)[]
+    {
+        ("Servicios", "PuedeVerServicios", "PuedeEditarServicios"),
+        ("Clientes", "PuedeVerClientes", "PuedeEditarClientes"),
+        ("Operadores", "PuedeVerOperadores", "PuedeEditarOperadores"),
+        ("Unidades", "PuedeVerUnidades", "PuedeEditarUnidades"),
+        ("Semirremolques", "PuedeVerSemirremolques", "PuedeEditarSemirremolques"),
+        ("Dollys", "PuedeVerDollys", "PuedeEditarDollys"),
+        ("Configuraciones", "PuedeVerConfiguraciones", "PuedeEditarConfiguraciones")
+    };
+}
+
+<div class="ggp-page-head">
+    <div>
+        <div class="ggp-eyebrow">Administración</div>
+        <h1>Usuarios</h1>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">+ Nuevo usuario</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="ggp-vacio"><p>Aún no hay usuarios registrados.</p></div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Rol</th>
+                    <th>Fecha de creación</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var u in Model)
+                {
+                    var esUsuarioActual = idUsuarioActual == u.Id
+                        || string.Equals(emailUsuarioActual, u.Email, StringComparison.OrdinalIgnoreCase);
+
+                    <tr>
+                        <td>@u.Id</td>
+                        <td>
+                            <b>@u.NombreCompleto</b>
+                            @if (esUsuarioActual)
+                            {
+                                <span class="ggp-tag-actual">Tú</span>
+                            }
+                        </td>
+                        <td>@u.Email</td>
+                        <td>
+                            <span class="ggp-pill @(u.Rol == "Admin" ? "pr" : "ag")">@u.Rol</span>
+                        </td>
+                        <td>@u.FechaCreacion.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            <div class="ggp-acciones">
+                                <form asp-action="CambiarRol" method="post" class="ggp-rol">
+                                    <input type="hidden" name="id" value="@u.Id" />
+                                    <select name="rol" class="form-select" disabled="@esUsuarioActual" aria-label="Rol">
+                                        <option value="Admin" selected="@(u.Rol == "Admin")">Admin</option>
+                                        <option value="User" selected="@(u.Rol == "User")">User</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-outline-primary" disabled="@esUsuarioActual">Cambiar</button>
+                                </form>
+
+                                <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#mdPass-@u.Id">
+                                    Contraseña
+                                </button>
+
+                                @if (!esUsuarioActual && u.Rol != "Admin")
+                                {
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#mdPerm-@u.Id">
+                                        Permisos
+                                    </button>
+                                }
+
+                                <form asp-action="Delete" asp-route-id="@u.Id" method="post" onsubmit="return confirm('¿Seguro que quieres eliminar este usuario?');">
+                                    <button type="submit" class="btn btn-outline-danger" disabled="@esUsuarioActual">Eliminar</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @foreach (var u in Model)
+    {
+        var esUsuarioActual = idUsuarioActual == u.Id
+            || string.Equals(emailUsuarioActual, u.Email, StringComparison.OrdinalIgnoreCase);
+
+        <div class="modal fade" id="mdPass-@u.Id" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Restablecer contraseña</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <form asp-action="ResetearPassword" asp-route-id="@u.Id" method="post">
+                        <div class="modal-body">
+                            <p class="text-muted mb-3">Asignarás una contraseña nueva a <b>@u.NombreCompleto</b>. Podrá cambiarla después desde su cuenta.</p>
+                            <label class="form-label">Nueva contraseña</label>
+                            <input type="password" name="password" class="form-control" placeholder="Mínimo 6 caracteres" required minlength="6" />
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        @if (!esUsuarioActual && u.Rol != "Admin")
+        {
+            <div class="modal fade" id="mdPerm-@u.Id" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Permisos de @u.NombreCompleto</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                        </div>
+                        <form asp-action="ActualizarPermisos" asp-route-id="@u.Id" method="post">
+                            <div class="modal-body">
+                                <p class="text-muted mb-3">Marca lo que este usuario podrá hacer en cada módulo.</p>
+                                <table class="table align-middle mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Módulo</th>
+                                            <th class="text-center">Ver</th>
+                                            <th class="text-center">Editar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var m in modulos)
+                                        {
+                                            var propVer = typeof(TransGGP.Domain.Models.Usuario).GetProperty(m.Ver);
+                                            var propEditar = typeof(TransGGP.Domain.Models.Usuario).GetProperty(m.Editar);
+                                            var valorVer = (bool)(propVer!.GetValue(u) ?? false);
+                                            var valorEditar = (bool)(propEditar!.GetValue(u) ?? false);
+
+                                            <tr>
+                                                <td>@m.Etiqueta</td>
+                                                <td class="text-center"><input type="checkbox" name="@m.Ver" value="true" checked="@valorVer" class="form-check-input" /></td>
+                                                <td class="text-center"><input type="checkbox" name="@m.Editar" value="true" checked="@valorEditar" class="form-check-input" /></td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-primary">Guardar permisos</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+}

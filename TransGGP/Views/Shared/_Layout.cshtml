@@ -1,48 +1,175 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+@using TransGGP.Application.Security
+@{
+    var controladorActual = ViewContext.RouteData.Values["Controller"]?.ToString();
+    var accionActual = ViewContext.RouteData.Values["Action"]?.ToString();
+    var autenticado = User.Identity?.IsAuthenticated == true;
+
+    var verServicios = autenticado && User.TienePermiso(Permisos.ServiciosLeer);
+    var verClientes = autenticado && User.TienePermiso(Permisos.ClientesLeer);
+    var verUnidades = autenticado && User.TienePermiso(Permisos.UnidadesLeer);
+    var verOperadores = autenticado && User.TienePermiso(Permisos.OperadoresLeer);
+    var verSemirremolques = autenticado && User.TienePermiso(Permisos.SemirremolquesLeer);
+    var verDollys = autenticado && User.TienePermiso(Permisos.DollysLeer);
+    var verConfiguraciones = autenticado && User.TienePermiso(Permisos.ConfiguracionesLeer);
+    var esAdmin = autenticado && User.IsInRole("Admin");
+
+    var grupoOperaciones = verServicios || verClientes;
+    var grupoFlota = verUnidades || verOperadores || verSemirremolques || verDollys || verConfiguraciones;
+
+    var opActivo = controladorActual == "Servicios" || controladorActual == "Clientes";
+    var flotaActivo = controladorActual == "Unidades" || controladorActual == "Operadores"
+        || controladorActual == "Semirremolques" || controladorActual == "Dollys" || controladorActual == "Configuraciones";
+}
+<!DOCTYPE html>
+<html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - TransGGP</title>
+    <title>@ViewData["Title"] - Transportes GGP</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/TransGGP.styles.css" asp-append-version="true" />
 </head>
 <body>
+    <svg class="ggp-lanes" viewBox="0 0 1200 900" preserveAspectRatio="none" aria-hidden="true">
+        <g class="lane-move">
+            <path class="l-navy" d="M-200,700 C 200,540 520,660 780,430 C 960,270 1100,240 1400,150" stroke-width="48" />
+            <path class="l-navy" d="M-200,782 C 220,610 540,720 800,500 C 990,340 1120,300 1400,215" stroke-width="30" />
+            <path class="l-gold" d="M-200,852 C 240,690 560,790 830,570 C 1020,415 1150,370 1400,285" stroke-width="26" />
+            <path class="l-navy route" d="M-200,905 C 260,760 580,855 860,640 C 1050,490 1180,440 1400,360" stroke-width="4" />
+        </g>
+    </svg>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">TransGGP</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-lg ggp-navbar sticky-top">
+            <div class="container-fluid px-lg-4">
+                <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/images/logo.png" height="46" alt="Transportes GGP" />
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal"
+                        aria-controls="menuPrincipal" aria-expanded="false" aria-label="Menú">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="collapse navbar-collapse" id="menuPrincipal">
+                    <ul class="navbar-nav me-auto align-items-lg-center">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link @(controladorActual == "Home" && accionActual == "Index" ? "active" : "")" asp-controller="Home" asp-action="Index">Inicio</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+
+                        @if (verServicios)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link @(controladorActual == "Dashboard" ? "active" : "")" asp-controller="Dashboard" asp-action="Index">Panel</a>
+                            </li>
+                        }
+
+                        @if (grupoOperaciones)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle @(opActivo ? "active" : "")" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Operaciones</a>
+                                <ul class="dropdown-menu">
+                                    @if (verServicios)
+                                    {
+                                        <li><a class="dropdown-item" asp-controller="Servicios" asp-action="Index">Servicios</a></li>
+                                    }
+                                    @if (verClientes)
+                                    {
+                                        <li><a class="dropdown-item" asp-controller="Clientes" asp-action="Index">Clientes</a></li>
+                                    }
+                                </ul>
+                            </li>
+                        }
+
+                        @if (grupoFlota)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle @(flotaActivo ? "active" : "")" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Flota</a>
+                                <ul class="dropdown-menu">
+                                    @if (verUnidades)
+                                    {
+                                        <li><a class="dropdown-item" asp-controller="Unidades" asp-action="Index">Unidades</a></li>
+                                    }
+                                    @if (verOperadores)
+                                    {
+                                        <li><a class="dropdown-item" asp-controller="Operadores" asp-action="Index">Operadores</a></li>
+                                    }
+                                    @if (verSemirremolques)
+                                    {
+                                        <li><a class="dropdown-item" asp-controller="Semirremolques" asp-action="Index">Semirremolques</a></li>
+                                    }
+                                    @if (verDollys)
+                                    {
+                                        <li><a class="dropdown-item" asp-controller="Dollys" asp-action="Index">Dollys</a></li>
+                                    }
+                                    @if (verConfiguraciones)
+                                    {
+                                        <li><a class="dropdown-item" asp-controller="Configuraciones" asp-action="Index">Configuraciones</a></li>
+                                    }
+                                </ul>
+                            </li>
+                        }
+
+                        @if (esAdmin)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle @(controladorActual == "Usuarios" ? "active" : "")" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Administración</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-controller="Usuarios" asp-action="Index">Usuarios</a></li>
+                                </ul>
+                            </li>
+                        }
                     </ul>
-                    <partial name="_LoginPartial" />
+
+                    <ul class="navbar-nav align-items-lg-center">
+                        @if (autenticado)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle ggp-user @(controladorActual == "Perfil" ? "active" : "")" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class="ggp-avatar">@(string.IsNullOrEmpty(User.Identity!.Name) ? "U" : User.Identity.Name!.Substring(0, 1).ToUpper())</span>
+                                    <span class="d-none d-lg-inline">@User.Identity.Name</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-lg-end">
+                                    <li><a class="dropdown-item" asp-controller="Perfil" asp-action="CambiarPassword">Cambiar contraseña</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form asp-controller="Cuenta" asp-action="Logout" method="post" class="px-2">
+                                            <button type="submit" class="btn btn-sm btn-outline-secondary w-100">Cerrar sesión</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                    </ul>
                 </div>
             </div>
         </nav>
     </header>
+
     <div class="container">
-        <main role="main" class="pb-3">
+        <main role="main" class="pb-3 page-fade">
+            @if (TempData["Exito"] != null)
+            {
+                <div class="alert alert-success ggp-alert">@TempData["Exito"]</div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-warning ggp-alert">@TempData["Error"]</div>
+            }
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="footer text-muted">
         <div class="container">
-            &copy; 2026 - TransGGP - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2026 · TransGGP · <a asp-controller="Home" asp-action="Privacy">Privacidad</a>
         </div>
     </footer>
+
+    @if (verServicios)
+    {
+        <partial name="_Asistente" />
+    }
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

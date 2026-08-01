@@ -1,0 +1,111 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using TransGGP.Application.Security;
+using TransGGP.Application.Services;
+using TransGGP.Domain.Models;
+using TransGGP.Application.Interfaces;
+using TransGGP.Application.Reports;
+
+namespace TransGGP.Web.Controllers
+{
+    [Authorize(Policy = Permisos.ClientesLeer)]
+    public class ClientesController : Controller // Hereda de Controller
+    {
+        private readonly ClienteService _clienteService;
+        private readonly IWebHostEnvironment _entorno;
+
+        // Constructor
+        public ClientesController(ClienteService clienteService, IWebHostEnvironment entorno)
+        {
+            _clienteService = clienteService; // Inyección de dependencias del servicio
+            _entorno = entorno;
+        }
+
+        // Index
+        public IActionResult Index()
+        {
+            List<Cliente> clientes = _clienteService.ObtenerTodos(); // Llama al servicio para obtener todos los clientes
+            return View(clientes);
+        }
+
+        // GET Create: muestra el formulario vacío
+        [Authorize(Policy = Permisos.ClientesEditar)]
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST Create: recibe los datos del formulario y guarda
+        [Authorize(Policy = Permisos.ClientesEditar)]
+        [HttpPost]
+        public IActionResult Create(Cliente cliente)
+        {
+            if (!ModelState.IsValid)
+                return View(cliente); // si los datos no son válidos, vuelve a mostrar el formulario
+
+            _clienteService.RegistrarCliente(cliente); // guarda el cliente
+            TempData["Exito"] = "Cliente guardado correctamente.";
+            return RedirectToAction("Index"); // tras guardar, redirige a la lista
+        }
+
+         [HttpGet]
+        public IActionResult Reporte()
+        {
+            List<Cliente> clientes = _clienteService.ObtenerTodos();
+
+            byte[]? logo = null;
+            var rutaLogo = Path.Combine(_entorno.WebRootPath, "images", "logo.png");
+            if (System.IO.File.Exists(rutaLogo))
+                logo = System.IO.File.ReadAllBytes(rutaLogo);
+
+            ReporteCreator creator = new ReporteClientesPdfCreator(clientes, logo);
+            ReporteArchivo archivo = creator.GenerarReporte();
+            return File(archivo.Contenido, archivo.TipoContenido, archivo.NombreArchivo);
+        }
+
+
+        // GET Edit
+        [Authorize(Policy = Permisos.ClientesEditar)]
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            Cliente? cliente = _clienteService.ObtenerPorId(id); // Llama al servicio para obtener un cliente por id
+            if (cliente == null)
+            {
+                return NotFound(); // Retorna 404 si no se encuentra el cliente
+            }
+            return View(cliente); // Retorna la vista con el cliente encontrado
+        }
+
+        // POST Edit: recibe los cambios y guarda
+        [Authorize(Policy = Permisos.ClientesEditar)]
+        [HttpPost]
+        public IActionResult Edit(Cliente cliente)
+        {
+            if (!ModelState.IsValid)
+                return View(cliente); // si no es válido, vuelve a mostrar el formulario
+
+            _clienteService.ActualizarCliente(cliente);
+            TempData["Exito"] = "Cliente actualizado correctamente.";
+            return RedirectToAction("Index");
+        }
+
+        // POST Delete
+        [Authorize(Policy = Permisos.ClientesEditar)]
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                _clienteService.EliminarCliente(id);
+            }
+            catch (Exception)
+            {
+                // La base restringe el borrado si el cliente tiene servicios (historial)
+                TempData["Error"] = "No se puede eliminar: este cliente tiene servicios registrados.";
+            }
+            return RedirectToAction("Index");
+        }
+    }
+}

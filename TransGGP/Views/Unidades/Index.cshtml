@@ -1,0 +1,61 @@
+@using TransGGP.Application.Security
+@model List<TransGGP.Domain.Models.Unidad>
+@{
+    var puedeEditar = User.TienePermiso(Permisos.UnidadesEditar);
+}
+
+<div class="ggp-page-head">
+    <div>
+        <div class="ggp-eyebrow">Flota</div>
+        <h1>Unidades</h1>
+    </div>
+    <div class="d-flex gap-2 flex-wrap">
+        @if (puedeEditar)
+        {
+        <a asp-action="Create" class="btn btn-primary">+ Nueva unidad</a>
+        }
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="ggp-vacio"><p>Aún no hay unidades registradas.</p></div>
+}
+else
+{
+    <div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Clave</th>
+                <th>Placa</th>
+                @if (puedeEditar)
+                {
+                    <th>Acciones</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var u in Model)
+            {
+                <tr>
+                    <td>@u.Id</td>
+                    <td>@u.Clave</td>
+                    <td>@u.Placa</td>
+                    @if (puedeEditar)
+                    {
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@u.Id" class="btn btn-primary btn-sm">Editar</a>
+                            <form asp-action="Delete" method="post" onsubmit="return confirm('¿Eliminar esta unidad?');" style="display:inline;">
+                                <input type="hidden" name="id" value="@u.Id" />
+                                <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                            </form>
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+    </div>
+}

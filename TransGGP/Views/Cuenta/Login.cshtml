@@ -1,0 +1,33 @@
+@model TransGGP.ViewModels.LoginViewModel
+@{
+    ViewData["Title"] = "Iniciar sesión";
+}
+
+<div class="ggp-login">
+    <div class="ggp-login-card">
+        <img src="~/images/logo.png" alt="Transportes GGP" class="ggp-login-logo" />
+        <h1 class="ggp-login-title">Iniciar sesión</h1>
+        <p class="ggp-login-sub">Entra con tu cuenta para administrar los servicios.</p>
+
+        <form asp-action="Login" asp-route-returnUrl="@ViewBag.ReturnUrl" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="mb-3 text-start">
+                <label asp-for="Email" class="form-label">Correo</label>
+                <input asp-for="Email" class="form-control" autofocus placeholder="tucorreo@transportesggp.com" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="mb-4 text-start">
+                <label asp-for="Password" class="form-label">Contraseña</label>
+                <input asp-for="Password" class="form-control" placeholder="Tu contraseña" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 btn-lg">Iniciar sesión</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
