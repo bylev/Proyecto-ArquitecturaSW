@@ -1,9 +1,12 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TransGGP.Application.Security;
 using TransGGP.Application.Services;
 using TransGGP.Domain.Models;
 
 namespace TransGGP.Web.Controllers
 {
+    [Authorize(Policy = Permisos.OperadoresLeer)]
     public class OperadoresController : Controller
     {
         private readonly OperadorService _operadorService;
@@ -18,12 +21,14 @@ namespace TransGGP.Web.Controllers
             return View(_operadorService.ObtenerTodos());
         }
 
+        [Authorize(Policy = Permisos.OperadoresEditar)]
         [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
+        [Authorize(Policy = Permisos.OperadoresEditar)]
         [HttpPost]
         public IActionResult Create(Operador operador)
         {
@@ -31,9 +36,33 @@ namespace TransGGP.Web.Controllers
                 return View(operador);
 
             _operadorService.RegistrarOperador(operador);
+            TempData["Exito"] = "Operador guardado correctamente.";
             return RedirectToAction("Index");
         }
 
+        [Authorize(Policy = Permisos.OperadoresEditar)]
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            Operador? operador = _operadorService.ObtenerPorId(id);
+            if (operador == null)
+                return NotFound();
+            return View(operador);
+        }
+
+        [Authorize(Policy = Permisos.OperadoresEditar)]
+        [HttpPost]
+        public IActionResult Edit(Operador operador)
+        {
+            if (!ModelState.IsValid)
+                return View(operador);
+
+            _operadorService.ActualizarOperador(operador);
+            TempData["Exito"] = "Operador actualizado correctamente.";
+            return RedirectToAction("Index");
+        }
+
+        [Authorize(Policy = Permisos.OperadoresEditar)]
         [HttpPost]
         public IActionResult Delete(int id)
         {

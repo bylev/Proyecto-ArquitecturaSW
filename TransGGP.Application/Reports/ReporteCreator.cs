@@ -1,36 +1,48 @@
+using TransGGP.Application.Interfaces;
+using TransGGP.Application.Dashboards;
 using TransGGP.Domain.Models;
 
 namespace TransGGP.Application.Reports
 {
-    /// <summary>
-    /// PATRÓN FACTORY METHOD (GOF - Creacional).
-    ///
-    /// CREATOR abstracto. Declara el "factory method" CrearReporte(), pero NO
-    /// decide qué producto concreto se crea: eso lo deciden las subclases.
-    /// Así, agregar un nuevo formato de reporte no obliga a tocar este código.
-    /// </summary>
+
     public abstract class ReporteCreator
     {
-        // EL FACTORY METHOD: cada subclase decide qué tipo de reporte fabricar.
-        public abstract IReporte CrearReporte();
+        public abstract IReporteCreator CrearReporte();
 
-        // Lógica común: usa el producto creado por la subclase, sin saber cuál es.
-        public string GenerarReporte(List<Cliente> clientes)
+        public ReporteArchivo GenerarReporte()
         {
-            IReporte reporte = CrearReporte();
-            return reporte.Generar(clientes);
+            IReporteCreator reporte = CrearReporte();
+            return reporte.Generar();
         }
     }
 
-    /// <summary>CREATOR concreto: fabrica reportes de texto.</summary>
-    public class ReporteTextoCreator : ReporteCreator
+    public class ReporteClientesPdfCreator : ReporteCreator
     {
-        public override IReporte CrearReporte() => new ReporteTexto();
+        private readonly List<Cliente> _clientes;
+        private readonly byte[]? _logo;
+
+        public ReporteClientesPdfCreator(List<Cliente> clientes, byte[]? logo)
+        {
+            _clientes = clientes;
+            _logo = logo;
+        }
+
+        public override IReporteCreator CrearReporte() => new ReporteClientesPdf(_clientes, _logo);
     }
 
-    /// <summary>CREATOR concreto: fabrica reportes CSV.</summary>
-    public class ReporteCsvCreator : ReporteCreator
+    public class ReporteServiciosPdfCreator : ReporteCreator
     {
-        public override IReporte CrearReporte() => new ReporteCsv();
+        private readonly DashboardResumen _resumen;
+        private readonly List<ServicioReporteFila> _servicios;
+        private readonly byte[]? _logo;
+
+        public ReporteServiciosPdfCreator(DashboardResumen resumen, List<ServicioReporteFila> servicios, byte[]? logo)
+        {
+            _resumen = resumen;
+            _servicios = servicios;
+            _logo = logo;
+        }
+
+        public override IReporteCreator CrearReporte() => new ReporteServiciosPdf(_resumen, _servicios, _logo);
     }
 }

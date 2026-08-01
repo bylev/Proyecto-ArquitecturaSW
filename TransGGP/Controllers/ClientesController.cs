@@ -1,20 +1,26 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using TransGGP.Application.Security;
 using TransGGP.Application.Services;
-using TransGGP.Application.Reports;
 using TransGGP.Domain.Models;
+using TransGGP.Application.Interfaces;
+using TransGGP.Application.Reports;
 
 namespace TransGGP.Web.Controllers
 {
+    [Authorize(Policy = Permisos.ClientesLeer)]
     public class ClientesController : Controller // Hereda de Controller
     {
         private readonly ClienteService _clienteService;
+        private readonly IWebHostEnvironment _entorno;
 
         // Constructor
-        public ClientesController(ClienteService clienteService)
+        public ClientesController(ClienteService clienteService, IWebHostEnvironment entorno)
         {
             _clienteService = clienteService; // Inyección de dependencias del servicio
+            _entorno = entorno;
         }
-      
+
         // Index
         public IActionResult Index()
         {
@@ -23,6 +29,7 @@ namespace TransGGP.Web.Controllers
         }
 
         // GET Create: muestra el formulario vacío
+        [Authorize(Policy = Permisos.ClientesEditar)]
         [HttpGet]
         public IActionResult Create()
         {
@@ -30,6 +37,7 @@ namespace TransGGP.Web.Controllers
         }
 
         // POST Create: recibe los datos del formulario y guarda
+        [Authorize(Policy = Permisos.ClientesEditar)]
         [HttpPost]
         public IActionResult Create(Cliente cliente)
         {
@@ -37,27 +45,28 @@ namespace TransGGP.Web.Controllers
                 return View(cliente); // si los datos no son válidos, vuelve a mostrar el formulario
 
             _clienteService.RegistrarCliente(cliente); // guarda el cliente
+            TempData["Exito"] = "Cliente guardado correctamente.";
             return RedirectToAction("Index"); // tras guardar, redirige a la lista
         }
 
-        // GET Reporte: usa el PATRÓN FACTORY METHOD para generar el reporte
-        // en el formato pedido (texto o csv). El controlador NO sabe cómo se
-        // arma cada formato: solo elige el "creador" y le pide el resultado.
-        [HttpGet]
-        public IActionResult Reporte(string formato = "texto")
+         [HttpGet]
+        public IActionResult Reporte()
         {
             List<Cliente> clientes = _clienteService.ObtenerTodos();
 
-            ReporteCreator creator = formato == "csv"
-                ? new ReporteCsvCreator()
-                : new ReporteTextoCreator();
+            byte[]? logo = null;
+            var rutaLogo = Path.Combine(_entorno.WebRootPath, "images", "logo.png");
+            if (System.IO.File.Exists(rutaLogo))
+                logo = System.IO.File.ReadAllBytes(rutaLogo);
 
-            string contenido = creator.GenerarReporte(clientes);
-            return Content(contenido, "text/plain"); // muestra el texto en el navegador
+            ReporteCreator creator = new ReporteClientesPdfCreator(clientes, logo);
+            ReporteArchivo archivo = creator.GenerarReporte();
+            return File(archivo.Contenido, archivo.TipoContenido, archivo.NombreArchivo);
         }
 
-        // Acciones que reciben un id : Edit y Delete
+
         // GET Edit
+        [Authorize(Policy = Permisos.ClientesEditar)]
         [HttpGet]
         public IActionResult Edit(int id)
         {
@@ -69,7 +78,21 @@ namespace TransGGP.Web.Controllers
             return View(cliente); // Retorna la vista con el cliente encontrado
         }
 
+        // POST Edit: recibe los cambios y guarda
+        [Authorize(Policy = Permisos.ClientesEditar)]
+        [HttpPost]
+        public IActionResult Edit(Cliente cliente)
+        {
+            if (!ModelState.IsValid)
+                return View(cliente); // si no es válido, vuelve a mostrar el formulario
+
+            _clienteService.ActualizarCliente(cliente);
+            TempData["Exito"] = "Cliente actualizado correctamente.";
+            return RedirectToAction("Index");
+        }
+
         // POST Delete
+        [Authorize(Policy = Permisos.ClientesEditar)]
         [HttpPost]
         public IActionResult Delete(int id)
         {

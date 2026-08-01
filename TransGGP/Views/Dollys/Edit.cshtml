@@ -1,0 +1,28 @@
+@model TransGGP.Domain.Models.Dolly
+
+<h1>Editar Dolly</h1>
+
+<form asp-action="Edit" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="FechaCreacion" />
+
+    <div class="mb-3">
+        <label asp-for="Clave" class="form-label">Clave</label>
+        <input asp-for="Clave" class="form-control" />
+        <span asp-validation-for="Clave" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Placa" class="form-label">Placa</label>
+        <input asp-for="Placa" class="form-control" />
+        <span asp-validation-for="Placa" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,32 +1,55 @@
+@using TransGGP.Application.Security
 @model List<TransGGP.Domain.Models.Unidad>
+@{
+    var puedeEditar = User.TienePermiso(Permisos.UnidadesEditar);
+}
 
 <h1>Unidades</h1>
 
-<a asp-action="Create" class="btn btn-primary mb-3">+ Nueva unidad</a>
+@if (puedeEditar)
+{
+    <a asp-action="Create" class="btn btn-primary mb-3">+ Nueva unidad</a>
+}
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Clave</th>
-            <th>Placa</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var u in Model)
-        {
+@if (!Model.Any())
+{
+    <p class="text-muted">Aún no hay unidades registradas.</p>
+}
+else
+{
+    <div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
             <tr>
-                <td>@u.Id</td>
-                <td>@u.Clave</td>
-                <td>@u.Placa</td>
-                <td>
-                    <form asp-action="Delete" method="post" onsubmit="return confirm('¿Eliminar esta unidad?');">
-                        <input type="hidden" name="id" value="@u.Id" />
-                        <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
-                    </form>
-                </td>
+                <th>Id</th>
+                <th>Clave</th>
+                <th>Placa</th>
+                @if (puedeEditar)
+                {
+                    <th>Acciones</th>
+                }
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var u in Model)
+            {
+                <tr>
+                    <td>@u.Id</td>
+                    <td>@u.Clave</td>
+                    <td>@u.Placa</td>
+                    @if (puedeEditar)
+                    {
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@u.Id" class="btn btn-primary btn-sm">Editar</a>
+                            <form asp-action="Delete" method="post" onsubmit="return confirm('¿Eliminar esta unidad?');" style="display:inline;">
+                                <input type="hidden" name="id" value="@u.Id" />
+                                <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                            </form>
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+    </div>
+}

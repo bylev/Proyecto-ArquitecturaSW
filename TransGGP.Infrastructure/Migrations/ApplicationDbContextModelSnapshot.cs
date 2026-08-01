@@ -35,7 +35,8 @@ namespace TransGGP.Infrastructure.Migrations
 
                     b.Property<string>("Nombre")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.HasKey("Id");
 
@@ -52,7 +53,8 @@ namespace TransGGP.Infrastructure.Migrations
 
                     b.Property<string>("Nombre")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.HasKey("Id");
 
@@ -69,14 +71,16 @@ namespace TransGGP.Infrastructure.Migrations
 
                     b.Property<string>("Clave")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
 
                     b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Placa")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(15)
+                        .HasColumnType("varchar(15)");
 
                     b.HasKey("Id");
 
@@ -96,11 +100,13 @@ namespace TransGGP.Infrastructure.Migrations
 
                     b.Property<string>("Nombre")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("NumeroOperador")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
 
                     b.HasKey("Id");
 
@@ -117,18 +123,21 @@ namespace TransGGP.Infrastructure.Migrations
 
                     b.Property<string>("Clave")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
 
                     b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Placa")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(15)
+                        .HasColumnType("varchar(15)");
 
                     b.Property<string>("Tipo")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
@@ -146,19 +155,21 @@ namespace TransGGP.Infrastructure.Migrations
                     b.Property<int>("ClienteId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ConfiguracionId")
+                    b.Property<int?>("ConfiguracionId")
                         .HasColumnType("int");
 
                     b.Property<string>("Destino")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<int?>("DollyId")
                         .HasColumnType("int");
 
                     b.Property<string>("Estatus")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<DateTime>("FechaCarga")
                         .HasColumnType("datetime(6)");
@@ -179,7 +190,8 @@ namespace TransGGP.Infrastructure.Migrations
 
                     b.Property<string>("NumeroEmbarque")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("NumeroRemision")
                         .IsRequired()
@@ -194,19 +206,33 @@ namespace TransGGP.Infrastructure.Migrations
 
                     b.Property<string>("Origen")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<int?>("SemirremolqueId")
                         .HasColumnType("int");
 
                     b.Property<string>("TipoCarga")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<int>("UnidadId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClienteId");
+
+                    b.HasIndex("ConfiguracionId");
+
+                    b.HasIndex("DollyId");
+
+                    b.HasIndex("OperadorId");
+
+                    b.HasIndex("SemirremolqueId");
+
+                    b.HasIndex("UnidadId");
 
                     b.ToTable("Servicios");
                 });
@@ -221,14 +247,16 @@ namespace TransGGP.Infrastructure.Migrations
 
                     b.Property<string>("Clave")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
 
                     b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Placa")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(15)
+                        .HasColumnType("varchar(15)");
 
                     b.HasKey("Id");
 
@@ -258,6 +286,48 @@ namespace TransGGP.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<bool>("PuedeEditarClientes")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("PuedeEditarConfiguraciones")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("PuedeEditarDollys")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("PuedeEditarOperadores")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("PuedeEditarSemirremolques")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("PuedeEditarServicios")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("PuedeEditarUnidades")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("PuedeVerClientes")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("PuedeVerConfiguraciones")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("PuedeVerDollys")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("PuedeVerOperadores")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("PuedeVerSemirremolques")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("PuedeVerServicios")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("PuedeVerUnidades")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("Rol")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -265,6 +335,66 @@ namespace TransGGP.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Usuarios");
+                });
+
+            modelBuilder.Entity("TransGGP.Domain.Models.Servicio", b =>
+                {
+                    b.HasOne("TransGGP.Domain.Models.Cliente", "Cliente")
+                        .WithMany("Servicios")
+                        .HasForeignKey("ClienteId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("TransGGP.Domain.Models.Configuracion", "Configuracion")
+                        .WithMany()
+                        .HasForeignKey("ConfiguracionId");
+
+                    b.HasOne("TransGGP.Domain.Models.Dolly", "Dolly")
+                        .WithMany()
+                        .HasForeignKey("DollyId");
+
+                    b.HasOne("TransGGP.Domain.Models.Operador", "Operador")
+                        .WithMany("Servicios")
+                        .HasForeignKey("OperadorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("TransGGP.Domain.Models.Semirremolque", "Semirremolque")
+                        .WithMany()
+                        .HasForeignKey("SemirremolqueId");
+
+                    b.HasOne("TransGGP.Domain.Models.Unidad", "Unidad")
+                        .WithMany("Servicios")
+                        .HasForeignKey("UnidadId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Cliente");
+
+                    b.Navigation("Configuracion");
+
+                    b.Navigation("Dolly");
+
+                    b.Navigation("Operador");
+
+                    b.Navigation("Semirremolque");
+
+                    b.Navigation("Unidad");
+                });
+
+            modelBuilder.Entity("TransGGP.Domain.Models.Cliente", b =>
+                {
+                    b.Navigation("Servicios");
+                });
+
+            modelBuilder.Entity("TransGGP.Domain.Models.Operador", b =>
+                {
+                    b.Navigation("Servicios");
+                });
+
+            modelBuilder.Entity("TransGGP.Domain.Models.Unidad", b =>
+                {
+                    b.Navigation("Servicios");
                 });
 #pragma warning restore 612, 618
         }

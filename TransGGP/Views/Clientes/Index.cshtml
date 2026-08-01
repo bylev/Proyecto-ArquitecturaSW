@@ -1,34 +1,58 @@
+@using TransGGP.Application.Security
 @model List<TransGGP.Domain.Models.Cliente>
+@{
+    var puedeEditar = User.TienePermiso(Permisos.ClientesEditar);
+}
 
 <h1>Clientes</h1>
 
-<a asp-action="Create" class="btn btn-primary mb-3">+ Nuevo cliente</a>
-<a asp-action="Reporte" asp-route-formato="texto" class="btn btn-outline-secondary mb-3" target="_blank">Reporte texto</a>
-<a asp-action="Reporte" asp-route-formato="csv" class="btn btn-outline-secondary mb-3" target="_blank">Reporte CSV</a>
+@if (puedeEditar)
+{
+    <a asp-action="Create" class="btn btn-primary mb-3">+ Nuevo cliente</a>
+}
+<a asp-action="Reporte" class="btn btn-outline-secondary mb-3">Reporte PDF</a>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Nombre</th>
-            <th>Fecha de creación</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var cliente in Model)
-        {
+@if (!Model.Any())
+{
+    <p class="text-muted">Aún no hay clientes registrados.</p>
+}
+else
+{
+    <div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
             <tr>
-                <td>@cliente.Id</td>
-                <td>@cliente.Nombre</td>
-                <td>@cliente.FechaCreacion.ToShortDateString()</td>
-                <td>
-                    <form asp-action="Delete" method="post" onsubmit="return confirm('¿Eliminar este cliente?');">
-                        <input type="hidden" name="id" value="@cliente.Id" />
-                        <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
-                    </form>
-                </td>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Fecha de creación</th>
+                @if (puedeEditar)
+                {
+                    <th>Acciones</th>
+                }
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var cliente in Model)
+            {
+                <tr>
+                    <td>@cliente.Id</td>
+                    <td>@cliente.Nombre</td>
+                    <td>@cliente.FechaCreacion.ToString("dd/MM/yyyy")</td>
+                    @if (puedeEditar)
+                    {
+                        <td>
+                            <div class="d-flex gap-2">
+                                <a asp-action="Edit" asp-route-id="@cliente.Id" class="btn btn-warning btn-sm">Editar</a>
+                                <form asp-action="Delete" method="post" onsubmit="return confirm('¿Eliminar este cliente?');">
+                                    <input type="hidden" name="id" value="@cliente.Id" />
+                                    <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                                </form>
+                            </div>
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+    </div>
+}

@@ -1,9 +1,10 @@
-# ADR-06: Deuda técnica identificada en el proyecto
+# ADR-06: Deuda técnica identificada en el proyecto y pruebas unitarias.
 
 | Campo  | Valor |
 |--------|-------|
 | Autor  | Michelle Cámara |
 | Fecha  | 15/07/2026 |
+| Ultima act. | 22/07/2026|
 | Estado | `Propuesto` |
 
 ---
@@ -165,6 +166,68 @@ Aplicaría **Externalize Configuration** (extraer la configuración fuera del c�
 - **Deuda o riesgo**: en esta iteración se documenta y prioriza, pero **no se cancela toda la deuda**. Mientras no se paguen las deudas #1–#3 los controladores siguen acoplados, y mientras no se pague la #4 las credenciales siguen en el repositorio; es una deuda asumida conscientemente para el alcance actual.
 
 ---
+
+---
+
+## Pruebas automatizadas e integración continua
+
+Como parte de esta iteración se agregó una suite de pruebas unitarias utilizando **xUnit**. El objetivo es verificar el comportamiento de las clases de la capa de aplicación sin depender de la base de datos ni de la infraestructura real del sistema.
+
+### Clases probadas
+
+Se eligieron las siguientes clases:
+
+- `ClienteService`
+- `OperadorService`
+- `UnidadService`
+
+Estas clases fueron seleccionadas porque coordinan operaciones importantes del sistema, como registrar, consultar y eliminar clientes, operadores y unidades.
+
+Además, reciben sus dependencias mediante las interfaces `IClienteRepository`, `IOperadorRepository` e `IUnidadRepository`. Esto permite sustituir los repositorios reales por repositorios falsos durante las pruebas y comprobar la lógica de los servicios sin conectarse a MySQL.
+
+### Casos de prueba
+
+Para cada clase se agregaron tres pruebas:
+
+1. Registrar una entidad y comprobar que fue almacenada correctamente.
+2. Buscar una entidad por su identificador y comprobar que se devuelve la información esperada.
+3. Eliminar una entidad existente y comprobar que ya no se encuentra en el repositorio.
+
+En total, la suite contiene **9 pruebas unitarias**:
+
+- 3 pruebas para `ClienteService`.
+- 3 pruebas para `OperadorService`.
+- 3 pruebas para `UnidadService`.
+
+Las pruebas utilizan la estructura **Arrange-Act-Assert**:
+
+- **Arrange:** se preparan el repositorio falso, el servicio y los datos necesarios.
+- **Act:** se ejecuta el método que se desea probar.
+- **Assert:** se comprueba que el resultado y el estado del repositorio sean los esperados.
+
+### Repositorios falsos
+
+Para aislar las clases de servicio se crearon las siguientes implementaciones:
+
+- `FakeClienteRepository`
+- `FakeOperadorRepository`
+- `FakeUnidadRepository`
+
+Se decidió utilizar repositorios falsos en lugar de una biblioteca de mocks porque permiten representar de manera sencilla un almacenamiento en memoria y facilitan la comprensión del funcionamiento de cada prueba.
+
+### Integración continua
+
+También se configuró un workflow de **GitHub Actions** que se ejecuta automáticamente en cada `push` y en cada actualización de un Pull Request.
+
+El pipeline realiza las siguientes operaciones:
+
+1. Descarga el repositorio.
+2. Configura el SDK de .NET 10.
+3. Restaura las dependencias.
+4. Compila la solución.
+5. Ejecuta todas las pruebas unitarias.
+
+Esta automatización permite detectar errores antes de integrar los cambios en la rama principal y asegura que las pruebas continúen funcionando después de cada modificación.
 
 ## Cláusula de IA
 

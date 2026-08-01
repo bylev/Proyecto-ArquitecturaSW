@@ -1,0 +1,227 @@
+@model TransGGP.Application.Dashboards.DashboardResumen
+
+@{
+    ViewData["Title"] = "Panel";
+
+    int Pct(int parte) => Model.Total == 0 ? 0 : (int)System.Math.Round(parte * 100.0 / Model.Total);
+
+    // La circunferencia del círculo (r=48) es ~301.6; cada segmento usa su parte.
+    double circ = 2 * System.Math.PI * 48;
+    double LenOf(int parte) => Model.Total == 0 ? 0 : circ * parte / Model.Total;
+    double GradOf(int parte) => Model.Total == 0 ? 0 : 360.0 * parte / Model.Total;
+
+    var lenEnt = LenOf(Model.Entregados);
+    var lenPro = LenOf(Model.EnProceso);
+    var lenAge = LenOf(Model.Agendados);
+    var lenCan = LenOf(Model.Cancelados);
+
+    var rotPro = GradOf(Model.Entregados);
+    var rotAge = rotPro + GradOf(Model.EnProceso);
+    var rotCan = rotAge + GradOf(Model.Agendados);
+
+    var maxMes = Model.Meses.Count == 0 ? 0 : Model.Meses.Max(m => m.Total);
+    var mesPico = maxMes == 0 ? -1 : Model.Meses.FindIndex(m => m.Total == maxMes);
+
+    System.Func<double, string> N = v => v.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
+}
+
+<div class="ggp-page-head">
+    <div>
+        <div class="ggp-eyebrow">Indicadores @Model.Anio</div>
+        <h1>Tu operación en vivo</h1>
+    </div>
+    <div class="d-flex align-items-center gap-2 flex-wrap">
+        <form asp-action="Index" method="get" class="d-flex align-items-center gap-2 mb-0">
+            <label class="form-label mb-0">Año</label>
+            <select name="anio" class="form-select" style="width:auto" onchange="this.form.submit()">
+                @foreach (var a in Model.AniosDisponibles)
+                {
+                    <option value="@a" selected="@(a == Model.Anio)">@a</option>
+                }
+            </select>
+        </form>
+        <a asp-action="Reporte" asp-route-anio="@Model.Anio" class="btn btn-warning">Descargar PDF</a>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-lg">
+        <div class="kpi-card" style="animation-delay:.02s">
+            <div class="kpi-value" data-contador="@Model.Total">@Model.Total</div>
+            <div class="kpi-label">Total servicios</div>
+            <svg class="kpi-spark" viewBox="0 0 100 34" preserveAspectRatio="none"><path d="M0,28 L15,24 L30,26 L45,15 L60,18 L75,8 L100,4" fill="none" stroke="var(--navy-soft)" stroke-width="2.8" stroke-linecap="round" /></svg>
+        </div>
+    </div>
+    <div class="col-6 col-lg">
+        <div class="kpi-card kpi--ok" style="animation-delay:.08s">
+            <div class="kpi-value" data-contador="@Model.Entregados">@Model.Entregados</div>
+            <div class="kpi-label">Entregados</div>
+            <svg class="kpi-spark" viewBox="0 0 100 34" preserveAspectRatio="none"><path d="M0,30 L18,27 L36,21 L54,22 L72,12 L86,9 L100,6" fill="none" stroke="var(--ok)" stroke-width="2.8" stroke-linecap="round" /></svg>
+        </div>
+    </div>
+    <div class="col-6 col-lg">
+        <div class="kpi-card kpi--proc" style="animation-delay:.14s">
+            <div class="kpi-value" data-contador="@Model.EnProceso">@Model.EnProceso</div>
+            <div class="kpi-label">En proceso</div>
+            <svg class="kpi-spark" viewBox="0 0 100 34" preserveAspectRatio="none"><path d="M0,19 L16,23 L32,16 L50,20 L66,13 L82,17 L100,10" fill="none" stroke="var(--proc)" stroke-width="2.8" stroke-linecap="round" /></svg>
+        </div>
+    </div>
+    <div class="col-6 col-lg">
+        <div class="kpi-card kpi--wait" style="animation-delay:.2s">
+            <div class="kpi-value" data-contador="@Model.Agendados">@Model.Agendados</div>
+            <div class="kpi-label">Agendados</div>
+            <svg class="kpi-spark" viewBox="0 0 100 34" preserveAspectRatio="none"><path d="M0,23 L18,20 L34,26 L52,17 L68,21 L84,15 L100,16" fill="none" stroke="var(--warn)" stroke-width="2.8" stroke-linecap="round" /></svg>
+        </div>
+    </div>
+    <div class="col-6 col-lg">
+        <div class="kpi-card kpi--danger" style="animation-delay:.26s">
+            <div class="kpi-value" data-contador="@Model.Cancelados">@Model.Cancelados</div>
+            <div class="kpi-label">Cancelados</div>
+            <svg class="kpi-spark" viewBox="0 0 100 34" preserveAspectRatio="none"><path d="M0,31 L20,31 L40,30 L60,31 L80,30 L100,31" fill="none" stroke="var(--bad)" stroke-width="2.8" stroke-linecap="round" /></svg>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4 rv">
+    <div class="col-lg-5">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="ggp-eyebrow">Distribución</div>
+                <h5 class="card-title mb-3">Por estatus</h5>
+                <div class="ggp-donut-wrap">
+                    <div class="ggp-donut">
+                        <svg viewBox="0 0 120 120">
+                            <circle class="track" cx="60" cy="60" r="48"></circle>
+                            @if (Model.Entregados > 0)
+                            {
+                                <circle class="seg" cx="60" cy="60" r="48" stroke="var(--ok)" style="--len:@N(lenEnt);--d:.15s"></circle>
+                            }
+                            @if (Model.EnProceso > 0)
+                            {
+                                <circle class="seg" cx="60" cy="60" r="48" stroke="var(--proc)" style="--len:@N(lenPro);--d:.5s;transform:rotate(@N(rotPro)deg);transform-origin:60px 60px"></circle>
+                            }
+                            @if (Model.Agendados > 0)
+                            {
+                                <circle class="seg" cx="60" cy="60" r="48" stroke="var(--warn)" style="--len:@N(lenAge);--d:.85s;transform:rotate(@N(rotAge)deg);transform-origin:60px 60px"></circle>
+                            }
+                            @if (Model.Cancelados > 0)
+                            {
+                                <circle class="seg" cx="60" cy="60" r="48" stroke="var(--bad)" style="--len:@N(lenCan);--d:1.2s;transform:rotate(@N(rotCan)deg);transform-origin:60px 60px"></circle>
+                            }
+                        </svg>
+                        <div class="ggp-donut-centro">
+                            <div>
+                                <strong data-contador="@Model.Total">@Model.Total</strong>
+                                <span>servicios</span>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="ggp-leyenda">
+                        <li><span class="ggp-punto" style="background:var(--ok)"></span> Entregado <span class="val">@Model.Entregados · @Pct(Model.Entregados)%</span></li>
+                        <li><span class="ggp-punto" style="background:var(--proc)"></span> En proceso <span class="val">@Model.EnProceso · @Pct(Model.EnProceso)%</span></li>
+                        <li><span class="ggp-punto" style="background:var(--warn)"></span> Agendado <span class="val">@Model.Agendados · @Pct(Model.Agendados)%</span></li>
+                        <li><span class="ggp-punto" style="background:var(--bad)"></span> Cancelado <span class="val">@Model.Cancelados · @Pct(Model.Cancelados)%</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-7">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="ggp-eyebrow">Actividad</div>
+                <h5 class="card-title mb-1">Servicios por mes</h5>
+                <p class="text-muted mb-2" style="font-size:.94rem">@Model.PorcentajeEntregados% entregados en el año</p>
+                <div class="ggp-bars">
+                    @{ var idx = 0; }
+                    @foreach (var m in Model.Meses)
+                    {
+                        var altura = maxMes == 0 ? 0 : (int)System.Math.Round(m.Total * 100.0 / maxMes);
+                        var esPico = idx == mesPico && m.Total > 0;
+                        <div class="ggp-bar-col">
+                            <div class="ggp-bar @(esPico ? "hi" : "")" data-cero="@(m.Total == 0 ? 1 : 0)" style="height:@(altura)%; animation-delay:@(idx * 45)ms">
+                                <span class="ggp-bar-tip">@m.Total @(m.Total == 1 ? "servicio" : "servicios")</span>
+                            </div>
+                            <div class="ggp-bar-label">@m.Mes.Substring(0, 3)</div>
+                        </div>
+                        idx++;
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="rv">
+    <div class="ggp-eyebrow mb-3">Resumen histórico</div>
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="kpi-card kpi-hist kpi--destacado h-100">
+                <div class="kpi-hist-valor" data-contador="@Model.TotalHistorico">@Model.TotalHistorico</div>
+                <div class="kpi-label">Total histórico</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="kpi-card kpi-hist h-100">
+                <div class="kpi-hist-valor" data-contador="@Model.ClientesActivos">@Model.ClientesActivos</div>
+                <div class="kpi-label">Clientes activos</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="kpi-card kpi-hist h-100">
+                <div class="kpi-hist-valor" title="@Model.MesMasActivo">@Model.MesMasActivo</div>
+                <div class="kpi-label">Mes más activo</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="kpi-card kpi-hist h-100">
+                <div class="kpi-hist-valor" title="@Model.OperadorMasActivo">@Model.OperadorMasActivo</div>
+                <div class="kpi-label">Operador más activo</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-4 rv">
+    <div class="card-body">
+        <div class="ggp-eyebrow">Comparativo</div>
+        <h5 class="card-title mb-3">Por año</h5>
+        @if (!Model.Comparativo.Any())
+        {
+            <p class="text-muted mb-0">Aún no hay servicios registrados para comparar.</p>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Año</th>
+                            <th class="text-center">Total</th>
+                            <th class="text-center">Entregados</th>
+                            <th class="text-center">Cancelados</th>
+                            <th class="text-center">% Entregados</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var c in Model.Comparativo)
+                        {
+                            <tr>
+                                <td><b>@c.Anio</b></td>
+                                <td class="text-center">@c.Total</td>
+                                <td class="text-center">@c.Entregados</td>
+                                <td class="text-center">@c.Cancelados</td>
+                                <td class="text-center">@c.PorcentajeEntregados%</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>window.ggpAnio = @Model.Anio;</script>
+}

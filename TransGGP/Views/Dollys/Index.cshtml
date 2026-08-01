@@ -1,0 +1,57 @@
+@using TransGGP.Application.Security
+@model List<TransGGP.Domain.Models.Dolly>
+@{
+    var puedeEditar = User.TienePermiso(Permisos.DollysEditar);
+}
+
+<h1>Dollys</h1>
+
+@if (puedeEditar)
+{
+    <a asp-action="Create" class="btn btn-primary mb-3">+ Nuevo dolly</a>
+}
+
+@if (!Model.Any())
+{
+    <p class="text-muted">Aún no hay dollys registrados.</p>
+}
+else
+{
+    <div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Clave</th>
+                <th>Placa</th>
+                <th>Fecha de creación</th>
+                @if (puedeEditar)
+                {
+                    <th>Acciones</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var d in Model)
+            {
+                <tr>
+                    <td>@d.Id</td>
+                    <td>@d.Clave</td>
+                    <td>@d.Placa</td>
+                    <td>@d.FechaCreacion.ToString("dd/MM/yyyy")</td>
+                    @if (puedeEditar)
+                    {
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@d.Id" class="btn btn-primary btn-sm">Editar</a>
+                            <form asp-action="Delete" method="post" onsubmit="return confirm('¿Eliminar este dolly?');" style="display:inline;">
+                                <input type="hidden" name="id" value="@d.Id" />
+                                <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                            </form>
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+    </div>
+}

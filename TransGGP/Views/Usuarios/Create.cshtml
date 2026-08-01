@@ -1,0 +1,90 @@
+@model TransGGP.ViewModels.UsuarioCrearViewModel
+
+<h1>Nuevo Usuario</h1>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="NombreCompleto" class="form-label">Nombre completo</label>
+        <input asp-for="NombreCompleto" class="form-control" />
+        <span asp-validation-for="NombreCompleto" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label">Correo</label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Password" class="form-label">Contraseña</label>
+        <input asp-for="Password" class="form-control" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Rol" class="form-label">Rol</label>
+        <select asp-for="Rol" class="form-select">
+            <option value="">-- Selecciona un rol --</option>
+            <option value="Admin">Admin (crea, edita y borra)</option>
+            <option value="User">User (solo consulta)</option>
+        </select>
+        <span asp-validation-for="Rol" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Permisos por módulo (solo para User)</label>
+        <p class="text-muted">Un Admin siempre tiene todos los permisos. Marca lo que este usuario podrá hacer.</p>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Módulo</th>
+                    <th class="text-center">Ver</th>
+                    <th class="text-center">Editar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Servicios</td>
+                    <td class="text-center"><input asp-for="PuedeVerServicios" class="form-check-input" /></td>
+                    <td class="text-center"><input asp-for="PuedeEditarServicios" class="form-check-input" /></td>
+                </tr>
+                <tr>
+                    <td>Clientes</td>
+                    <td class="text-center"><input asp-for="PuedeVerClientes" class="form-check-input" /></td>
+                    <td class="text-center"><input asp-for="PuedeEditarClientes" class="form-check-input" /></td>
+                </tr>
+                <tr>
+                    <td>Operadores</td>
+                    <td class="text-center"><input asp-for="PuedeVerOperadores" class="form-check-input" /></td>
+                    <td class="text-center"><input asp-for="PuedeEditarOperadores" class="form-check-input" /></td>
+                </tr>
+                <tr>
+                    <td>Unidades</td>
+                    <td class="text-center"><input asp-for="PuedeVerUnidades" class="form-check-input" /></td>
+                    <td class="text-center"><input asp-for="PuedeEditarUnidades" class="form-check-input" /></td>
+                </tr>
+                <tr>
+                    <td>Semirremolques</td>
+                    <td class="text-center"><input asp-for="PuedeVerSemirremolques" class="form-check-input" /></td>
+                    <td class="text-center"><input asp-for="PuedeEditarSemirremolques" class="form-check-input" /></td>
+                </tr>
+                <tr>
+                    <td>Dollys</td>
+                    <td class="text-center"><input asp-for="PuedeVerDollys" class="form-check-input" /></td>
+                    <td class="text-center"><input asp-for="PuedeEditarDollys" class="form-check-input" /></td>
+                </tr>
+                <tr>
+                    <td>Configuraciones</td>
+                    <td class="text-center"><input asp-for="PuedeVerConfiguraciones" class="form-check-input" /></td>
+                    <td class="text-center"><input asp-for="PuedeEditarConfiguraciones" class="form-check-input" /></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
