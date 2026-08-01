@@ -594,103 +594,157 @@ main{padding-top:1.2rem;}
 /* ============================================================
    CELULAR Y TABLETA
    ============================================================ */
+
+/* Nunca permitir desplazamiento lateral de la pagina */
+html, body { max-width:100%; overflow-x:hidden; }
+/* Quita el destello gris al tocar en Android */
+a, button, .btn, .nav-link, .dropdown-item { -webkit-tap-highlight-color: rgba(28,61,115,.12); }
+
 @media (max-width: 991.98px){
-  /* el menú desplegado necesita fondo propio, si no se ve transparente */
+  /* Menu desplegado: tarjeta propia para que no se vea transparente */
   .ggp-navbar .navbar-collapse{
-    background:var(--card);border:1px solid var(--line);border-radius:16px;
-    margin-top:.7rem;padding:.6rem;box-shadow:var(--s3);
+    background:var(--card); border:1px solid var(--line); border-radius:16px;
+    margin-top:.7rem; padding:.5rem; box-shadow:var(--s3);
+    max-height:calc(100vh - 120px); overflow-y:auto;
   }
-  .navbar-brand{border-right:0;padding-right:0;}
-  .navbar-brand img{height:44px;}
-  .navbar-nav .nav-link{padding:.7rem .9rem!important;}
-  .navbar-nav .nav-link::after{left:.9rem;right:.9rem;}
-  .dropdown-menu{box-shadow:none;border:0;background:var(--bg-2);margin-top:.2rem!important;}
-  .ggp-user{justify-content:flex-start;}
+  .navbar-brand{ border-right:0; padding-right:0; margin-right:0; }
+  .navbar-brand img{ height:40px; }
+  .navbar-nav .nav-link{ padding:.75rem .9rem!important; font-size:1rem; }
+  .navbar-nav .nav-link::after{ left:.9rem; right:.9rem; }
+  .dropdown-menu{ box-shadow:none; border:0; background:var(--bg-2); margin-top:.2rem!important; padding:.25rem; }
+  .dropdown-item{ padding:.65rem .9rem; }
+  .ggp-user{ justify-content:flex-start; }
+  .navbar-nav + .navbar-nav{ margin-top:.35rem; padding-top:.35rem; border-top:1px solid var(--line); }
 }
 
 @media (max-width: 767.98px){
-  body{font-size:16.5px;padding-bottom:80px;}
+  body{ font-size:16px; padding-bottom:70px; }
+  .container{ padding-left:1rem; padding-right:1rem; }
+  main{ padding-top:.6rem; }
+  .ggp-lanes{ opacity:.6; }
 
-  /* la portada se apila y respira */
-  .ggp-hero{gap:26px;padding-top:1.4rem;}
-  .ggp-hero-title{font-size:clamp(2.3rem,10vw,3.2rem);letter-spacing:-1.2px;}
-  .ggp-hero-sub{font-size:1.05rem;}
-  .ggp-hero-cta{width:100%;}
-  .ggp-hero-cta .btn{flex:1 1 auto;justify-content:center;}
-  .ggp-logo-plate{max-width:330px;padding:24px 22px;animation:none;}
-  .ggp-badge{right:0;bottom:12px;padding:.55rem .8rem;animation:none;}
-  .ggp-badge b{font-size:1.15rem;}
+  /* ---------- Portada ---------- */
+  .ggp-hero{ gap:22px; padding:1rem 0 1.5rem; }
+  .ggp-hero-title{ font-size:clamp(2rem,9vw,2.8rem); letter-spacing:-1.1px; }
+  .ggp-hero-sub{ font-size:1rem; margin-bottom:1.4rem; }
+  .ggp-chip{ font-size:.7rem; letter-spacing:1.8px; padding:.4rem .9rem; }
+  .ggp-hero-cta{ width:100%; }
+  .ggp-hero-cta .btn{ flex:1 1 45%; justify-content:center; }
+  .ggp-logo-stage{ min-height:auto; }
+  .ggp-logo-plate{ max-width:280px; padding:20px 18px; animation:none; border-radius:20px; }
+  .modulo-card{ padding:1.2rem .9rem; border-radius:16px; }
+  .modulo-card h3{ font-size:1.08rem; }
+  .modulo-card p{ font-size:.86rem; }
+  .modulo-card .mi{ width:38px; height:38px; margin-bottom:.7rem; }
 
-  /* encabezados de página apilados */
-  .ggp-page-head{align-items:stretch;flex-direction:column;gap:.9rem;padding-bottom:.9rem;}
-  .ggp-page-head > div:last-child{width:100%;}
-  .ggp-page-head .btn{flex:1 1 auto;justify-content:center;}
-  /* el selector de año y el botón comparten la fila por igual */
-  .ggp-page-head form{flex:1 1 auto;}
-  .ggp-page-head form .form-select{flex:1 1 auto;width:auto!important;}
-  .ggp-page-head .form-label{white-space:nowrap;}
+  /* ---------- Encabezados de pagina ---------- */
+  .ggp-page-head{ align-items:stretch; flex-direction:column; gap:.8rem; padding-bottom:.85rem; margin-bottom:1.2rem; }
+  .ggp-page-head > div:last-child{ width:100%; }
+  .ggp-page-head .btn{ flex:1 1 auto; justify-content:center; }
+  .ggp-page-head form{ flex:1 1 auto; margin:0; }
+  .ggp-page-head form .form-select{ flex:1 1 auto; width:auto!important; }
+  .ggp-page-head .form-label{ white-space:nowrap; margin:0; }
+  h1{ font-size:1.65rem; }
+  h2{ font-size:1.4rem; } h3{ font-size:1.22rem; }
+  .ggp-eyebrow{ font-size:.7rem; letter-spacing:2.4px; }
 
-  /* inicio de sesión */
-  .ggp-login{min-height:auto;padding:.5rem 0 2rem;}
-  .ggp-login-card{padding:1.9rem 1.4rem;border-radius:20px;}
-  .ggp-login-logo{width:160px;margin-bottom:1.1rem;}
-  .ggp-login-title{font-size:1.7rem;}
-  .ggp-login-sub{font-size:.98rem;margin-bottom:1.5rem;}
+  /* ---------- Inicio de sesion ---------- */
+  .ggp-login{ min-height:auto; padding:.5rem 0 2rem; }
+  .ggp-login-card{ padding:1.7rem 1.2rem; border-radius:18px; }
+  .ggp-login-logo{ width:150px; margin-bottom:1rem; }
+  .ggp-login-title{ font-size:1.5rem; }
+  .ggp-login-sub{ font-size:.92rem; margin-bottom:1.3rem; }
 
-  h1{font-size:1.95rem;}
-  h2{font-size:1.65rem;} h3{font-size:1.4rem;}
-  .card-body{padding:1.15rem;}
-  .kpi-card{padding:1.15rem;}
-  .kpi-card .kpi-value{font-size:2.4rem;}
-  .kpi-card .kpi-label{font-size:.92rem;}
-  .kpi-hist .kpi-hist-valor{font-size:1.5rem;letter-spacing:-.7px;min-height:2rem;}
+  /* ---------- Tarjetas e indicadores ---------- */
+  .card{ border-radius:16px; }
+  .card-body{ padding:1.1rem; }
+  .card-title{ font-size:1.15rem; }
+  .kpi-card{ padding:1.05rem; border-radius:16px; }
+  .kpi-card .kpi-value{ font-size:2.1rem; letter-spacing:-1.4px; }
+  .kpi-card .kpi-label{ font-size:.84rem; }
+  .kpi-card .kpi-spark{ height:26px; }
+  .kpi-hist .kpi-hist-valor{ font-size:1.25rem; letter-spacing:-.5px; min-height:1.8rem; }
 
-  /* gráficas */
-  .ggp-donut-wrap{justify-content:center;}
-  .ggp-donut,.ggp-donut svg{width:160px;height:160px;}
-  .ggp-bars{height:180px;gap:.25rem;}
-  .ggp-bar{max-width:26px;}
-  .ggp-bar-label{font-size:.68rem;}
+  /* ---------- Graficas ---------- */
+  .ggp-donut-wrap{ justify-content:center; gap:1rem; }
+  .ggp-donut, .ggp-donut svg{ width:150px; height:150px; }
+  .ggp-donut-centro strong{ font-size:1.6rem; }
+  .ggp-leyenda{ min-width:100%; }
+  .ggp-leyenda li{ font-size:.92rem; padding:.45rem 0; }
+  .ggp-bars{ height:160px; gap:.2rem; padding-top:.6rem; }
+  .ggp-bar{ max-width:22px; border-radius:6px 6px 3px 3px; }
+  .ggp-bar-label{ font-size:.62rem; }
+  .ggp-bar-tip{ font-size:.72rem; }
 
-  /* tablas: se deslizan de lado en vez de romper la página */
-  .table-responsive{-webkit-overflow-scrolling:touch;}
-  .table{font-size:.98rem;}
-  .table thead th{padding:.75rem .8rem;font-size:.78rem;}
-  .table tbody td{padding:.75rem .8rem;}
+  /* ---------- Tablas: aviso visual de que se deslizan ---------- */
+  .table-responsive{
+    -webkit-overflow-scrolling:touch;
+    border-radius:14px; border:1px solid var(--line); background:var(--card);
+    background-image:
+      linear-gradient(to right, var(--card), transparent 12px),
+      linear-gradient(to left, var(--card), transparent 12px),
+      linear-gradient(to right, rgba(16,42,82,.10), transparent 10px),
+      linear-gradient(to left, rgba(16,42,82,.10), transparent 10px);
+    background-position: 0 0, 100% 0, 0 0, 100% 0;
+    background-repeat:no-repeat;
+    background-size: 24px 100%, 24px 100%, 12px 100%, 12px 100%;
+    background-attachment: local, local, scroll, scroll;
+  }
+  .table-responsive .table{ border:0; border-radius:0; margin-top:0; box-shadow:none; }
+  .table{ font-size:.92rem; }
+  .table thead th{ padding:.7rem .75rem; font-size:.7rem; letter-spacing:.8px; white-space:nowrap; }
+  .table tbody td{ padding:.7rem .75rem; }
+  .ggp-pill{ font-size:.74rem; padding:.22rem .65rem; }
 
-  /* acciones a lo ancho, sin encimarse */
-  .ggp-acciones{gap:.45rem;}
+  /* ---------- Acciones dentro de tablas ---------- */
+  .ggp-acciones{ gap:.4rem; }
   .ggp-acciones .btn,
-  .ggp-acciones .form-select{height:42px;font-size:.9rem;}
-  .ggp-acciones .form-select{min-width:104px;}
+  .ggp-acciones .form-select{ height:40px; font-size:.82rem; }
+  .ggp-acciones .form-select{ min-width:96px; }
 
-  /* formularios cómodos con el pulgar */
-  .form-control,.form-select{font-size:1.05rem;padding:.85rem 1rem;}
-  .btn{padding:.75rem 1.35rem;}
+  /* ---------- Formularios ---------- */
+  .ggp-form-card{ padding:1.15rem; border-radius:16px; max-width:100%; }
+  .ggp-form-acciones{ margin-top:1.2rem; padding-top:1rem; }
+  .ggp-form-acciones .btn{ flex:1 1 auto; justify-content:center; }
+  .form-control, .form-select{ font-size:1rem; padding:.8rem .95rem; }
+  .form-label{ font-size:.9rem; }
+  .btn{ padding:.72rem 1.25rem; font-size:.9rem; }
+  .ggp-vacio{ padding:1.8rem 1rem; border-radius:14px; }
+  .ggp-vacio p{ font-size:.94rem; }
 
-  /* ventanas emergentes pegadas a los bordes */
-  .modal-dialog{margin:.6rem;}
-  .modal-header,.modal-footer{padding:1rem 1.1rem;}
-  .modal-body{padding:1.15rem;}
-  .modal-title{font-size:1.15rem;}
-  .modal-footer .btn{flex:1 1 auto;}
+  /* ---------- Paginacion comoda con el pulgar ---------- */
+  .pagination{ flex-wrap:wrap; justify-content:center; gap:.3rem; }
+  .page-link{ padding:.55rem .85rem; font-size:.9rem; min-width:42px; text-align:center; }
 
-  /* chat a pantalla casi completa */
-  .ggp-chat{right:16px;bottom:16px;}
-  .ggp-chat-toggle{width:58px;height:58px;border-radius:18px;}
+  /* ---------- Ventanas emergentes ---------- */
+  .modal-dialog{ margin:.5rem; }
+  .modal-header, .modal-footer{ padding:.9rem 1rem; }
+  .modal-body{ padding:1.1rem; }
+  .modal-title{ font-size:1.05rem; }
+  .modal-footer .btn{ flex:1 1 auto; }
+
+  /* ---------- Chat ---------- */
+  .ggp-chat{ right:14px; bottom:14px; }
+  .ggp-chat-toggle{ width:50px; height:50px; border-radius:16px; }
   .ggp-chat-panel{
-    position:fixed;right:16px;left:16px;bottom:88px;width:auto;
-    height:min(70vh,520px);
+    position:fixed; right:12px; left:12px; bottom:74px; width:auto;
+    height:min(62vh,420px); border-radius:18px;
   }
 
-  .footer{height:auto;line-height:1.5;padding:1rem 0;}
+  .footer{ height:auto; line-height:1.5; padding:.9rem 0; font-size:.85rem; }
 }
 
-@media (max-width: 420px){
-  .ggp-acciones{flex-direction:column;align-items:stretch;}
-  .ggp-acciones form,.ggp-acciones .btn{width:100%;}
-  .ggp-rol .form-select{flex:1;}
+@media (max-width: 480px){
+  .ggp-hero-cta .btn{ flex:1 1 100%; }
+  .ggp-page-head .btn{ width:100%; }
+  .kpi-card .kpi-value{ font-size:1.85rem; }
+  .ggp-donut, .ggp-donut svg{ width:132px; height:132px; }
+  .ggp-acciones{ flex-direction:column; align-items:stretch; }
+  .ggp-acciones form, .ggp-acciones .btn{ width:100%; }
+  .ggp-rol{ display:flex; }
+  .ggp-rol .form-select{ flex:1; min-width:0; }
 }
+
 
 /* Accesibilidad */
 @media (prefers-reduced-motion: reduce){
@@ -701,3 +755,29 @@ main{padding-top:1.2rem;}
   .ggp-hero-title .em::after{transform:scaleX(1);}
 }
 :focus-visible{outline:3px solid var(--gold);outline-offset:2px;}
+
+/* ============================================================
+   FORMULARIOS EN TARJETA (crear / editar)
+   ============================================================ */
+.ggp-form-card{
+  background:var(--card);border:1px solid var(--line);border-radius:20px;
+  box-shadow:var(--s2),var(--hi);padding:1.8rem;max-width:680px;
+  animation:fadeUp .45s var(--e-out) both;
+}
+.ggp-form-card .form-label{margin-bottom:.4rem;}
+.ggp-form-acciones{
+  display:flex;gap:.7rem;flex-wrap:wrap;margin-top:1.6rem;
+  padding-top:1.3rem;border-top:1px solid var(--line);
+}
+@media (max-width:575.98px){
+  .ggp-form-card{padding:1.2rem;border-radius:16px;}
+  .ggp-form-acciones .btn{flex:1 1 auto;justify-content:center;}
+}
+
+/* Estado vacío más presentable */
+.ggp-vacio{
+  background:var(--card);border:1px dashed var(--line);border-radius:18px;
+  padding:2.5rem 1.5rem;text-align:center;color:var(--muted);box-shadow:var(--s1);
+}
+.ggp-vacio p{margin:0;font-size:1rem;}
+.ggp-form-card.ancha{max-width:860px;}
