@@ -6,12 +6,18 @@
     var puedeEditar = User.TienePermiso(Permisos.ServiciosEditar);
 }
 
-<h1>Servicios de transporte</h1>
-
-@if (puedeEditar)
-{
-    <a asp-action="Create" class="btn btn-primary mb-3">+ Registrar servicio</a>
-}
+<div class="ggp-page-head">
+    <div>
+        <div class="ggp-eyebrow">Operaciones</div>
+        <h1>Servicios de transporte</h1>
+    </div>
+    <div class="d-flex gap-2 flex-wrap">
+        @if (puedeEditar)
+        {
+        <a asp-action="Create" class="btn btn-primary">+ Registrar servicio</a>
+        }
+    </div>
+</div>
 
 <form asp-action="Index" method="get" class="row g-2 mb-3">
     <div class="col-auto">
@@ -25,7 +31,7 @@
 
 @if (!Model.Any())
 {
-    <p class="text-muted">No se encontraron servicios.</p>
+    <div class="ggp-vacio"><p>No se encontraron servicios.</p></div>
 }
 else
 {

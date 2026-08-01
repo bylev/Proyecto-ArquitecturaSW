@@ -2,6 +2,7 @@
 
 <h1>Nuevo Usuario</h1>
 
+<div class="ggp-form-card ancha">
 <form asp-action="Create" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -81,9 +82,14 @@
         </table>
     </div>
 
-    <button type="submit" class="btn btn-primary">Guardar</button>
+    <div class="ggp-form-acciones">
+
+        <button type="submit" class="btn btn-primary">Guardar</button>
     <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+
+    </div>
 </form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
