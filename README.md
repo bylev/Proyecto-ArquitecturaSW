@@ -187,6 +187,7 @@ Proyecto-ArquitecturaSW/
 │   ├── ADR-05-Michelle-Camara.md                # Patrones de diseño GoF
 │   ├── ADR-06-Michelle-Camara.md                # Deuda técnica y pruebas unitarias
 │   ├── ADR-07-Michelle-Camara.md                # Migración a AWS (RDS + Elastic Beanstalk)
+│   ├── ATAM-Michelle-Camara.md                  # Evaluación ATAM de la arquitectura
 │   └── Diagramas.md                             # Diagramas C4 en Mermaid
 │
 ├── images/                                      # 🖼️ Imágenes de documentación
@@ -706,6 +707,12 @@ graph LR
 | [ADR-05](docs/ADR-05-Michelle-Camara.md) | Patrones de diseño GoF (Decorator y Factory Method) | `Propuesto` |
 | [ADR-06](docs/ADR-06-Michelle-Camara.md) | Deuda técnica y pruebas unitarias | `Propuesto` |
 | [ADR-07](docs/ADR-07-Michelle-Camara.md) | Migración a AWS (RDS + Elastic Beanstalk) | `Aceptado` |
+
+## ── 🧭 Evaluación ATAM
+
+La arquitectura definida en los ADR anteriores se evaluó con el método **ATAM** (*Architecture Tradeoff Analysis Method*) del SEI: árbol de utilidad, escenarios de calidad, puntos de sensibilidad, trade-offs, riesgos y no-riesgos.
+
+> Ver la evaluación completa en [ATAM-Michelle-Camara.md](docs/ATAM-Michelle-Camara.md).
 
 ## ── 📖 Swagger
 
